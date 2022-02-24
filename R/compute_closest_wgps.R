@@ -34,9 +34,9 @@ compute_closest_wgps <- function(a, b, c, d, sc, nthread){
     stop('Input values for compute_closest_wgps cannot be empty values.')
   }
 
-  if (length(d) != 1){
-    stop('Expecting a scaler number for d.')
-  }
+  # if (length(d) != 1){
+  #   stop('Expecting a scaler number for d.')
+  # }
 
   if (length(sc) != 1){
     stop('Expecting a scaler number for sc(scale).')
@@ -50,8 +50,13 @@ compute_closest_wgps <- function(a, b, c, d, sc, nthread){
     stop('Expecting sc in [0,1] range.')
   }
 
-   c_minus_d <- abs(c-d)*(1-sc)
-   wm <- compute_closest_wgps_helper(a, b, c_minus_d, sc, nthread)
+  if(length(d)==1){
+    c_minus_d <- abs(c-d)*(1-sc)
+    wm <- compute_closest_wgps_helper(a, b, c_minus_d, sc, nthread)
+  } else{
+    wm <- compute_closest_distance_helper(a, b, c, d, sc, nthread)
+  }
+
 
    return(wm)
 }

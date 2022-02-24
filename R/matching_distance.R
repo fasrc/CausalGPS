@@ -5,7 +5,7 @@
 #' Matching function using L1 distance on single exposure level w
 #'
 #' @param dataset a completed observational data frame or matrix containing
-#'  (Y, w, gps, counter, row_index, c).
+#'  (Y, w, gps, z, counter, row_index, c).
 #' @param e_gps_pred a vector of predicted gps values obtained by Machine
 #' learning methods.
 #' @param e_gps_std_pred a vector of predicted std of gps obtained by
@@ -30,19 +30,19 @@
 #'
 #' @keywords internal
 #'
-matching_l1 <- function(w,
-                        dataset,
-                        e_gps_pred,
-                        e_gps_std_pred,
-                        w_resid,
-                        gps_mx,
-                        w_mx,
-                        z_mx = NULL,
-                        gps_model = "parametric",
-                        delta_n=1,
-                        scale=0.5,
-                        nthread=1,
-                        optimized_compile)
+matching_distance <- function(w,
+                              dataset,
+                              e_gps_pred,
+                              e_gps_std_pred,
+                              w_resid,
+                              gps_mx,
+                              w_mx,
+                              z_mx,
+                              gps_model = "parametric",
+                              delta_n=1,
+                              scale=0.5,
+                              nthread=1,
+                              optimized_compile)
 {
 
   if (length(w)!=1){
@@ -66,36 +66,40 @@ matching_l1 <- function(w,
   w_max <- w_mx[2]
   gps_min <- gps_mx[1]
   gps_max <- gps_mx[2]
+  z_min <- z_mx[1]
+  z_max <- z_mx[2]
 
   # handles check note.
   gps <- NULL
 
   dataset <- transform(dataset,
                        std_w = (w - w_min) / (w_max - w_min),
-                       std_gps = (gps - gps_min) / (gps_max - gps_min))
+                       std_gps = (gps - gps_min) / (gps_max - gps_min),
+                       std_z = (z - z_min) / (z_max - z_min))
 
   std_w <- (w - w_min) / (w_max - w_min)
   std_p_w <- (p_w - gps_min) / (gps_max - gps_min)
+  std_z <- (dataset$z - z_min) / (z_max - z_min)
 
   dataset_subset <- dataset[abs(dataset[["w"]] - w) <= (delta_n/2), ]
 
   if (nrow(dataset_subset) < 1){
     logger:: log_warn(paste("There is no data to match with ", w, "in ", delta_n/2,
-                  " radius."))
+                            " radius."))
     return(list())
   }
 
   wm <- compute_closest_wgps(dataset_subset[["std_gps"]],
                              std_p_w,
-                             dataset_subset[["std_w"]],
-                             std_w,
+                             dataset_subset[["std_z"]],
+                             std_z,
                              scale,
                              nthread)
 
 
   dp <- dataset_subset[wm,]
 
-  dp["std_w"] <- NULL
+  dp["std_z"] <- NULL
   dp["std_gps"] <- NULL
 
   e_ml_t <- proc.time()
