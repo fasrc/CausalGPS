@@ -41,14 +41,18 @@ log_system_info <- function(){
 #' @keywords internal
 #'
 
-convert_data_into_standard_format <- function(Y, w, c, q1, q2, ci_appr){
+convert_data_into_standard_format <- function(Y, w, c, z=NULL, q1, q2, ci_appr){
 
   w_4 <- replicate(4, w)
   colnames(w_4) <- c("w", "gps", "counter", "row_index")
   w_4 <- data.frame(w_4)
   w_4$counter <- w_4$counter * 0 + 1
   if (ci_appr=="matching"){
-    tmp_data <- cbind(Y,w_4,c)
+    if(!is.null(z)){
+      tmp_data <- cbind(Y,w_4,z,c)
+    }else{
+      tmp_data <- cbind(Y,w_4,c)
+    }
   } else if (ci_appr=="weighting"){
     tmp_data <- cbind(Y,w_4,w*0+1,c)
   }

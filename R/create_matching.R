@@ -41,6 +41,7 @@ create_matching <- function(dataset, bin_seq = NULL, gps_model = "parametric",
 
   gps_mx <- dataset[[5]]
   w_mx <- dataset[[6]]
+  z_mx <- dataset[[7]]
 
   if (is.null(bin_seq)){
 
@@ -91,6 +92,7 @@ create_matching <- function(dataset, bin_seq = NULL, gps_model = "parametric",
                                         w_resid=dataset[[4]],
                                         gps_mx = gps_mx,
                                         w_mx = w_mx,
+                                        z_mx = z_mx,
                                         gps_model = gps_model,
                                         delta_n = delta_n,
                                         scale = scale,

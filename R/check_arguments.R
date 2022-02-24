@@ -193,7 +193,7 @@ check_args_compile_pseudo_pop <- function(ci_appr, use_cov_transform,
   }
 
   if (is.element(ci_appr, c('matching'))){
-    if (!is.element(matching_fun, c('matching_l1'))){
+    if (!is.element(matching_fun, c('matching_l1','matching_distance'))){
       stop(paste(matching_fun, " is not a valid matching function."))
     }
 

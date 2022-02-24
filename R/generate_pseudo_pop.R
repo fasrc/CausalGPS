@@ -11,6 +11,7 @@
 #' @param Y A vector of observed outcome variable.
 #' @param w A vector of observed continuous exposure variable.
 #' @param c A data.frame or matrix of observed covariates variable.
+#' @param z A vector of observed continuous multi-level variable.
 #' @param ci_appr The causal inference approach. Possible values are:
 #'   - "matching": Matching by GPS
 #'   - "weighting": Weighting by GPS
@@ -104,6 +105,7 @@
 generate_pseudo_pop <- function(Y,
                                 w,
                                 c,
+                                z = NULL,
                                 ci_appr,
                                 pred_model,
                                 gps_model = "parametric",
@@ -158,7 +160,7 @@ generate_pseudo_pop <- function(Y,
   logger::log_debug("{trim_quantiles[1]*100}% qauntile for trim: {q1}")
   logger::log_debug("{trim_quantiles[2]*100}% for trim: {q2}")
 
-  tmp_data <- convert_data_into_standard_format(Y, w, c, q1, q2, ci_appr)
+  tmp_data <- convert_data_into_standard_format(Y, w, c, z, q1, q2, ci_appr)
 
   original_corr_obj <- check_covar_balance(tmp_data, ci_appr, nthread,
                                            optimized_compile, ...)
@@ -187,7 +189,7 @@ generate_pseudo_pop <- function(Y,
 
     ## Estimate GPS -----------------------------
     logger::log_debug("Started to estimate gps ... ")
-    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)],
+    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)], z=z,
                                      pred_model, gps_model,
                                      params = params, nthread = nthread,
                                      internal_use = internal_use, ...)

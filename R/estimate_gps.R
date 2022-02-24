@@ -9,6 +9,7 @@
 #' @param Y A vector of observed outcome variable.
 #' @param w A vector of observed continuous exposure variable.
 #' @param c A data frame of observed covariates variable.
+#' @param z A vector of observed continuous multi-level variable.
 #' @param pred_model The selected prediction model.
 #' @param gps_model Model type which is used for estimating GPS value, including
 #' parametric (default) and non-parametric.
@@ -51,6 +52,7 @@
 estimate_gps <- function(Y,
                          w,
                          c,
+                         z=NULL,
                          pred_model,
                          gps_model = "parametric",
                          internal_use = TRUE,
@@ -113,7 +115,14 @@ estimate_gps <- function(Y,
   gps_mx <- compute_min_max(gps)
   counter <- (w*0)+0 # initialize counter.
   row_index <- seq(1,length(w),1) # initialize row index.
-  dataset <- cbind(Y,w,gps,counter, row_index, c)
+
+  if(!is.null(z)){
+    z_mx <- compute_min_max(z)
+    dataset <- cbind(Y,w,gps,counter,row_index,z,c)
+  } else{
+    z_mx <- NULL
+    dataset <- cbind(Y,w,gps,counter,row_index, c)
+  }
 
   # Logging for debugging purposes
   logger::log_debug("Min Max of treatment: {paste(w_mx, collapse = ', ')}")
@@ -139,7 +148,7 @@ estimate_gps <- function(Y,
                     " {(end_time - start_time)[[3]]} seconds.")
 
   if (internal_use){
-    return(list(dataset, e_gps_pred, e_gps_std_pred, w_resid, gps_mx, w_mx))
+    return(list(dataset, e_gps_pred, e_gps_std_pred, w_resid, gps_mx, w_mx, z_mx))
   } else {
     return(list(dataset))
   }
