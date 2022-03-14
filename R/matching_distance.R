@@ -99,8 +99,9 @@ matching_distance <- function(w,
 
   dp <- dataset_subset[wm,]
 
-  dp["std_z"] <- NULL
+  dp["std_w"] <- NULL
   dp["std_gps"] <- NULL
+  dp["std_z"] <- NULL
 
   e_ml_t <- proc.time()
   logger::log_debug("Finished matching on single w value (w = {w}), ",
