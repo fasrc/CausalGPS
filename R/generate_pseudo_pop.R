@@ -106,6 +106,7 @@ generate_pseudo_pop <- function(Y,
                                 w,
                                 c,
                                 z = NULL,
+                                pool=FALSE,
                                 ci_appr,
                                 pred_model,
                                 gps_model = "parametric",
@@ -189,8 +190,8 @@ generate_pseudo_pop <- function(Y,
 
     ## Estimate GPS -----------------------------
     logger::log_debug("Started to estimate gps ... ")
-    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)], z=z,
-                                     pred_model, gps_model,
+    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)], z = z, pool = pool,
+                                     pred_model = pred_model, gps_model = gps_model,
                                      params = params, nthread = nthread,
                                      internal_use = internal_use, ...)
     logger::log_debug("Finished estimating gps.")
@@ -215,8 +216,13 @@ generate_pseudo_pop <- function(Y,
                                      trim_quantiles = trim_quantiles,
                                      optimized_compile = optimized_compile,...)
     # trim pseudo population
-    pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop) ,],
-                         w <= q2  & w >= q1)
+    if(isTRUE(pool)){
+      pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop[,!c("Nm","ipw")]) ,],
+                           w <= q2  & w >= q1)
+    }else{
+      pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop) ,],
+                           w <= q2  & w >= q1)
+    }
     logger::log_debug("Finished compiling pseudo population.")
 
     if (ci_appr == 'adjust'){
@@ -224,8 +230,14 @@ generate_pseudo_pop <- function(Y,
       break
     }
     # check covariate balance
-    adjusted_corr_obj <- check_covar_balance(pseudo_pop, ci_appr, nthread,
+    tmp_data <- pseudo_pop
+    if(isTRUE(pool)){ # don't calculate covariate balance for "Nm" and "ipw"
+      tmp_data[,"Nm":=NULL]
+      tmp_data[,"ipw":=NULL]
+    }
+    adjusted_corr_obj <- check_covar_balance(tmp_data, ci_appr, nthread,
                                              optimized_compile, ...)
+    tmp_data <- NULL
 
     if (is.null(best_ach_covar_balance)){
       best_ach_covar_balance <- adjusted_corr_obj$corr_results$mean_absolute_corr
