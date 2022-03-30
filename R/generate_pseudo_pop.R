@@ -230,14 +230,13 @@ generate_pseudo_pop <- function(Y,
       break
     }
     # check covariate balance
-    tmp_data <- pseudo_pop
-    if(isTRUE(pool)){ # don't calculate covariate balance for "Nm" and "ipw"
-      tmp_data[,"Nm":=NULL]
-      tmp_data[,"ipw":=NULL]
+    if(isTRUE(pool)){
+      adjusted_corr_obj <- check_covar_balance(pseudo_pop[,!c("Nm","ipw")], ci_appr, nthread,
+                                               optimized_compile, ...)
+    }else{
+      adjusted_corr_obj <- check_covar_balance(pseudo_pop, ci_appr, nthread,
+                                               optimized_compile, ...)
     }
-    adjusted_corr_obj <- check_covar_balance(tmp_data, ci_appr, nthread,
-                                             optimized_compile, ...)
-    tmp_data <- NULL
 
     if (is.null(best_ach_covar_balance)){
       best_ach_covar_balance <- adjusted_corr_obj$corr_results$mean_absolute_corr
@@ -288,10 +287,10 @@ generate_pseudo_pop <- function(Y,
           if(length(transformed_vals[[el_ind]])>1){
             if (!is.element(operand,
                             transformed_vals[[el_ind]][2:length(transformed_vals[[el_ind]])])){
-                new_c <- c_name
-                new_op <- operand
-                value_found = TRUE
-                break
+              new_c <- c_name
+              new_op <- operand
+              value_found = TRUE
+              break
             }
           } else {
             new_c <- c_name
@@ -317,18 +316,18 @@ generate_pseudo_pop <- function(Y,
         next
       } else {
 
-      # add operand into the transformed_vals
-      transformed_vals[[el_ind]][length(transformed_vals[[el_ind]])+1] <- new_op
+        # add operand into the transformed_vals
+        transformed_vals[[el_ind]][length(transformed_vals[[el_ind]])+1] <- new_op
 
-      t_dataframe <- transform_it(new_c, c_extended[[new_c]], new_op)
+        t_dataframe <- transform_it(new_c, c_extended[[new_c]], new_op)
 
-      c_extended <- cbind(c_extended, t_dataframe)
-      recent_swap <- c(new_c, unlist(colnames(t_dataframe)))
-      index_to_remove <- which(unlist(covariate_cols)==new_c)
-      covariate_cols[[index_to_remove]] <- NULL
-      covariate_cols[length(covariate_cols)+1] <- unlist(colnames(t_dataframe))
-      logger::log_debug("In the next iteration (if any) feature {c_name}",
-                        " will be replaced by {unlist(colnames(t_dataframe))}.")
+        c_extended <- cbind(c_extended, t_dataframe)
+        recent_swap <- c(new_c, unlist(colnames(t_dataframe)))
+        index_to_remove <- which(unlist(covariate_cols)==new_c)
+        covariate_cols[[index_to_remove]] <- NULL
+        covariate_cols[length(covariate_cols)+1] <- unlist(colnames(t_dataframe))
+        logger::log_debug("In the next iteration (if any) feature {c_name}",
+                          " will be replaced by {unlist(colnames(t_dataframe))}.")
       }
       logger::log_debug("------------ Finished conducting covariate transform.")
     }
