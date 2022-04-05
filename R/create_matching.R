@@ -78,6 +78,7 @@ create_matching <- function(dataset, bin_seq = NULL, gps_model = "parametric",
                            nthread = nthread,
                            optimized_compile = optimized_compile)
 
+
   e_t_m <- proc.time()
   logger::log_debug("Finished generating matched set (Wall clock time:  ",
                     " {(e_t_m - st_t_m)[[3]]} seconds).")

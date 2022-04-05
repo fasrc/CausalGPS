@@ -106,6 +106,7 @@ generate_pseudo_pop <- function(Y,
                                 w,
                                 c,
                                 z = NULL,
+                                pool=FALSE,
                                 ci_appr,
                                 pred_model,
                                 gps_model = "parametric",
@@ -189,8 +190,8 @@ generate_pseudo_pop <- function(Y,
 
     ## Estimate GPS -----------------------------
     logger::log_debug("Started to estimate gps ... ")
-    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)], z=z,
-                                     pred_model, gps_model,
+    estimate_gps_out <- estimate_gps(Y, w, c_extended[unlist(covariate_cols)], z = z, pool = pool,
+                                     pred_model = pred_model, gps_model = gps_model,
                                      params = params, nthread = nthread,
                                      internal_use = internal_use, ...)
     logger::log_debug("Finished estimating gps.")
@@ -215,8 +216,13 @@ generate_pseudo_pop <- function(Y,
                                      trim_quantiles = trim_quantiles,
                                      optimized_compile = optimized_compile,...)
     # trim pseudo population
-    pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop) ,],
-                         w <= q2  & w >= q1)
+    if(isTRUE(pool)){
+      pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop[,!c("Nm","ipw")]) ,],
+                           w <= q2  & w >= q1)
+    }else{
+      pseudo_pop <- subset(pseudo_pop[stats::complete.cases(pseudo_pop) ,],
+                           w <= q2  & w >= q1)
+    }
     logger::log_debug("Finished compiling pseudo population.")
 
     if (ci_appr == 'adjust'){
@@ -224,8 +230,13 @@ generate_pseudo_pop <- function(Y,
       break
     }
     # check covariate balance
-    adjusted_corr_obj <- check_covar_balance(pseudo_pop, ci_appr, nthread,
-                                             optimized_compile, ...)
+    if(isTRUE(pool)){
+      adjusted_corr_obj <- check_covar_balance(pseudo_pop[,!c("Nm","ipw")], ci_appr, nthread,
+                                               optimized_compile, ...)
+    }else{
+      adjusted_corr_obj <- check_covar_balance(pseudo_pop, ci_appr, nthread,
+                                               optimized_compile, ...)
+    }
 
     if (is.null(best_ach_covar_balance)){
       best_ach_covar_balance <- adjusted_corr_obj$corr_results$mean_absolute_corr
@@ -276,10 +287,10 @@ generate_pseudo_pop <- function(Y,
           if(length(transformed_vals[[el_ind]])>1){
             if (!is.element(operand,
                             transformed_vals[[el_ind]][2:length(transformed_vals[[el_ind]])])){
-                new_c <- c_name
-                new_op <- operand
-                value_found = TRUE
-                break
+              new_c <- c_name
+              new_op <- operand
+              value_found = TRUE
+              break
             }
           } else {
             new_c <- c_name
@@ -305,18 +316,18 @@ generate_pseudo_pop <- function(Y,
         next
       } else {
 
-      # add operand into the transformed_vals
-      transformed_vals[[el_ind]][length(transformed_vals[[el_ind]])+1] <- new_op
+        # add operand into the transformed_vals
+        transformed_vals[[el_ind]][length(transformed_vals[[el_ind]])+1] <- new_op
 
-      t_dataframe <- transform_it(new_c, c_extended[[new_c]], new_op)
+        t_dataframe <- transform_it(new_c, c_extended[[new_c]], new_op)
 
-      c_extended <- cbind(c_extended, t_dataframe)
-      recent_swap <- c(new_c, unlist(colnames(t_dataframe)))
-      index_to_remove <- which(unlist(covariate_cols)==new_c)
-      covariate_cols[[index_to_remove]] <- NULL
-      covariate_cols[length(covariate_cols)+1] <- unlist(colnames(t_dataframe))
-      logger::log_debug("In the next iteration (if any) feature {c_name}",
-                        " will be replaced by {unlist(colnames(t_dataframe))}.")
+        c_extended <- cbind(c_extended, t_dataframe)
+        recent_swap <- c(new_c, unlist(colnames(t_dataframe)))
+        index_to_remove <- which(unlist(covariate_cols)==new_c)
+        covariate_cols[[index_to_remove]] <- NULL
+        covariate_cols[length(covariate_cols)+1] <- unlist(colnames(t_dataframe))
+        logger::log_debug("In the next iteration (if any) feature {c_name}",
+                          " will be replaced by {unlist(colnames(t_dataframe))}.")
       }
       logger::log_debug("------------ Finished conducting covariate transform.")
     }
@@ -348,6 +359,7 @@ generate_pseudo_pop <- function(Y,
   result$ci_appr <- ci_appr
   result$optimized_compile <- optimized_compile
 
+  if(isTRUE(internal_use)){result$gps_mx <- estimate_gps_out[[5]]}
   end_time_gpp <- proc.time()
 
   logger::log_debug("Wall clock time to run generate_pseudo_pop:",

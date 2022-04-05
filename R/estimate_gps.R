@@ -52,7 +52,8 @@
 estimate_gps <- function(Y,
                          w,
                          c,
-                         z=NULL,
+                         z = NULL,
+                         pool = FALSE,
                          pred_model,
                          gps_model = "parametric",
                          internal_use = TRUE,
@@ -93,6 +94,8 @@ estimate_gps <- function(Y,
     w_resid <- compute_resid(w,e_gps_pred,e_gps_std_pred)
     gps <- stats::dnorm(w, mean = e_gps_pred, sd = e_gps_std_pred)
 
+    Nm <- ipw <- NA
+
   } else if (gps_model == "non-parametric"){
 
     e_gps <- train_it(target = w, input = c, pred_model,
@@ -103,6 +106,9 @@ estimate_gps <- function(Y,
     e_gps_std_pred <- e_gps_std$SL.predict
     w_resid <- compute_resid(w,e_gps_pred,e_gps_std_pred)
     gps <- compute_density(w_resid, w_resid)
+
+    Nm <- compute_density(w, w)
+    ipw <- Nm / gps
 
   } else {
 
@@ -116,12 +122,22 @@ estimate_gps <- function(Y,
   counter <- (w*0)+0 # initialize counter.
   row_index <- seq(1,length(w),1) # initialize row index.
 
-  if(!is.null(z)){
-    z_mx <- compute_min_max(z)
-    dataset <- cbind(Y,w,gps,counter,row_index,z,c)
-  } else{
-    z_mx <- NULL
-    dataset <- cbind(Y,w,gps,counter,row_index, c)
+  if(isTRUE(pool)){ # output Nm,ipw
+    if(!is.null(z)){
+      z_mx <- compute_min_max(z)
+      dataset <- cbind(Y,w,gps,counter,row_index,Nm,ipw,z,c)
+    } else{
+      z_mx <- NULL
+      dataset <- cbind(Y,w,gps,counter,row_index,Nm,ipw,c)
+    }
+  } else{ # don't output Nm,ipw
+    if(!is.null(z)){
+      z_mx <- compute_min_max(z)
+      dataset <- cbind(Y,w,gps,counter,row_index,z,c)
+    } else{
+      z_mx <- NULL
+      dataset <- cbind(Y,w,gps,counter,row_index, c)
+    }
   }
 
   # Logging for debugging purposes
