@@ -43,6 +43,7 @@ The function returns a S3 object. Including the following:
 \item w_mx (min and max of w).
 \item used_params
 \item formula
+\item fcall
 }
 }
 \description{

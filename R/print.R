@@ -153,3 +153,51 @@ summary.gpsm_pspop <- function(object, ...) {
   }
   cat("--- *** --- \n")
 }
+
+
+
+#' @title
+#' Extend print function for cgps_gps object
+#'
+#' @param x A cgps_gps object.
+#' @param ... Additional arguments passed to customize the results.
+#'
+#' @return
+#' No return value. This function is called for side effects.
+#'
+#' @export
+#'
+print.cgps_gps <- function(x, ...) {
+
+  x <- unclass(x)
+
+  cat(" CausalGPS gps object\n")
+  cat(" function call: \n")
+  cat("      ***       \n")
+  print(x$fcall, ...)
+  cat("      ***       \n")
+  cat(" Output data can be accessed at $dataset \n")
+  cat(" Look at summary for more details.")
+}
+
+
+#' @title
+#' print summary of cgps_gps object
+
+#'
+#' @param object A cgps_gps object.
+#' @param ... Additional arguments passed to customize the results.
+#'
+#' @return
+#' Returns summary of data
+#' @export
+summary.cgps_gps <- function(object, ...) {
+
+  cat("--- CausalGPS gps object summary --- \n")
+  cat("      ***       \n")
+  data_size <- nrow(object$dataset)
+  cat(paste0("Number of data samples: ", data_size, "\n"))
+  cat(paste0("Used formula: ", deparse(object$formula), "\n"))
+  cat("--- *** --- \n")
+
+}

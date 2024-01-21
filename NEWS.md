@@ -2,6 +2,7 @@
 
 ### Added 
 * `estimate_gps` now accepts formula for generating GPS object.
+* `estimate_gps` now has functions for generic plot, print, and summary functions.
 
 ### Changed 
 

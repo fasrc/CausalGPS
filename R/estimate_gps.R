@@ -26,6 +26,7 @@
 #'   - w_mx (min and max of w).
 #'   - used_params
 #'   - formula
+#'   - fcall
 #'
 #' @note
 #' If \code{internal.use} is set to be FALSE, only original data set + GPS will
@@ -57,6 +58,9 @@ estimate_gps <- function(data,
                          nthread = 1,
                          ...) {
 
+
+  #TODO: Drop generating sl_lib internally, and let the user provide it as input.
+
   start_time <- proc.time()
 
   # Check passed arguments -----------------------------------------------------
@@ -72,6 +76,9 @@ estimate_gps <- function(data,
   for (i in arg_names){
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
+
+  # function call
+  fcall <- match.call()
 
   # Check if data has missing value(s) -----------------------------------------
   if (sum(is.na(data)) > 0){
@@ -182,6 +189,7 @@ estimate_gps <- function(data,
   result$gps_mx <- gps_mx
   result$w_mx <- w_mx
   result$formula <- formula
+  result$fcall <- fcall
 
   invisible(result)
 }

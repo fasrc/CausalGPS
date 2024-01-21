@@ -272,3 +272,71 @@ plot.gpsm_pspop <- function(x, ...) {
   print(g)
   invisible(g)
 }
+
+
+
+#' @title
+#' A helper function for cgps_gps object
+#'
+#' @description
+#' A helper function to plot cgps_gps object using ggplot2 package.
+#'
+#' @param object A cgps_gps object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @return
+#' Returns a ggplot object.
+#'
+#' @export
+#'
+#' @keywords internal
+#' @importFrom ggplot2 autoplot
+#' @importFrom rlang .data
+#'
+autoplot.cgps_gps <- function(object, ...){
+
+  ## collect additional arguments
+  dot_args <- list(...)
+  arg_names <- names(dot_args)
+
+  for (i in arg_names) {
+    assign(i, unlist(dot_args[i], use.names = FALSE))
+  }
+
+
+  # create a density plot
+  dataset <- object$dataset
+
+  g <- ggplot2::ggplot(data = dataset,
+                       ggplot2::aes(x = .data$gps)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
+                       ggplot2::geom_density(fill = "blue", alpha = 0.5) +
+                       ggplot2::ggtitle("Density Plot of GPS Values")
+  g <- g + ggplot2::labs(x = "GPS value", y = "Density")
+
+  return(g)
+
+}
+
+
+#' @title
+#' Extend generic plot functions for cgps_gps class
+#'
+#' @description
+#' A wrapper function to extend generic plot functions for cgps_gps class.
+#'
+#' @param x  A cgps_gps object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @return
+#' Returns a ggplot2 object, invisibly. This function is called for side effects.
+#'
+#' @export
+#'
+plot.cgps_gps <- function(x, ...) {
+  g <- ggplot2::autoplot(x, ...)
+  print(g)
+  invisible(g)
+}
+
