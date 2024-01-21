@@ -15,8 +15,6 @@
 #' @param params Includes list of parameters that are used internally. Unrelated
 #'  parameters will be ignored.
 #' @param sl_lib A vector of prediction algorithms.
-#' @param nthread An integer value that represents the number threads to be used
-#' in a shared memory system.
 #' @param ...  Additional arguments passed to the model.
 #'
 #' @return
@@ -36,7 +34,6 @@
 #' data_with_gps <- estimate_gps(data= m_d,
 #'                               formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
 #'                               gps_density = "normal",
-#'                               nthread = 1,
 #'                               sl_lib = c("m_xgboost")
 #'                              )
 #'}
@@ -44,7 +41,6 @@ estimate_gps <- function(data,
                          formula,
                          gps_density = "normal",
                          sl_lib = c("m_xgboost"),
-                         nthread = 1,
                          ...) {
 
 

@@ -8,9 +8,7 @@ estimate_gps(
   data,
   formula,
   gps_density = "normal",
-  params = list(),
   sl_lib = c("m_xgboost"),
-  nthread = 1,
   ...
 )
 }
@@ -25,15 +23,12 @@ variable and the covariates. For example, w ~ I(cf1^2) + cf2.}
 \item{gps_density}{Model type which is used for estimating GPS value,
 including \code{normal} (default) and \code{kernel}.}
 
-\item{params}{Includes list of parameters that are used internally. Unrelated
-parameters will be ignored.}
-
 \item{sl_lib}{A vector of prediction algorithms.}
 
-\item{nthread}{An integer value that represents the number threads to be used
-in a shared memory system.}
-
 \item{...}{Additional arguments passed to the model.}
+
+\item{params}{Includes list of parameters that are used internally. Unrelated
+parameters will be ignored.}
 }
 \value{
 The function returns a S3 object. Including the following:
@@ -41,7 +36,6 @@ The function returns a S3 object. Including the following:
 \item \code{dataset }: \code{id}, \code{w}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred}, \code{w_resid}
 \item gps_mx (min and max of gps)
 \item w_mx (min and max of w).
-\item used_params
 \item formula
 \item fcall
 }
@@ -50,22 +44,12 @@ The function returns a S3 object. Including the following:
 Estimates GPS value for each observation using normal or kernel
 approaches.
 }
-\note{
-If \code{internal.use} is set to be FALSE, only original data set + GPS will
-be returned.
-
-The outcome variable is not used in estimating the GPS value. However, it is
-used in compiling the data set with GPS values.
-}
 \examples{
 \donttest{
 m_d <- generate_syn_data(sample_size = 100)
 data_with_gps <- estimate_gps(data= m_d,
                               formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
                               gps_density = "normal",
-                              params = list(xgb_max_depth = c(3, 4, 5),
-                                       xgb_nrounds=c(10, 20, 30, 40, 50, 60)),
-                              nthread = 1,
                               sl_lib = c("m_xgboost")
                              )
 }

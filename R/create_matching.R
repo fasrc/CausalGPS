@@ -38,8 +38,6 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
 
-  #matching_fun <- get(matching_fun)
-
   gps_mx <- data_obj$gps_mx
   w_mx <- data_obj$w_mx
 

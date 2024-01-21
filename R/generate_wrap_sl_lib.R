@@ -28,6 +28,8 @@ gen_wrap_sl_lib <- function(lib_name, params, nthread) {
   # ------------------------------------------------------
 
 
+  .Deprecated("myDeprecatedFunction is deprecated and will be removed in future versions.")
+
   if (lib_name == "m_xgboost") {
     xgb_default_params = list("xgb_nrounds" = 100,
                               "xgb_max_depth" = 6,
