@@ -24,16 +24,8 @@
 #'   - `dataset `: `id`, `w`, `gps`, `e_gps_pred`, `e_gps_std_pred`, `w_resid`
 #'   - gps_mx (min and max of gps)
 #'   - w_mx (min and max of w).
-#'   - used_params
 #'   - formula
 #'   - fcall
-#'
-#' @note
-#' If \code{internal.use} is set to be FALSE, only original data set + GPS will
-#' be returned.
-#'
-#' The outcome variable is not used in estimating the GPS value. However, it is
-#' used in compiling the data set with GPS values.
 #'
 #'
 #' @export
@@ -44,8 +36,6 @@
 #' data_with_gps <- estimate_gps(data= m_d,
 #'                               formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
 #'                               gps_density = "normal",
-#'                               params = list(xgb_max_depth = c(3, 4, 5),
-#'                                        xgb_nrounds=c(10, 20, 30, 40, 50, 60)),
 #'                               nthread = 1,
 #'                               sl_lib = c("m_xgboost")
 #'                              )
@@ -53,13 +43,10 @@
 estimate_gps <- function(data,
                          formula,
                          gps_density = "normal",
-                         params = list(),
                          sl_lib = c("m_xgboost"),
                          nthread = 1,
                          ...) {
 
-
-  #TODO: Drop generating sl_lib internally, and let the user provide it as input.
 
   start_time <- proc.time()
 
@@ -93,27 +80,10 @@ estimate_gps <- function(data,
   response_var = all.vars(formula)[1]
   response_data = data[[response_var]]
 
-
-
-  # Generate SL wrapper library for each type of prediction algorithms ---------
-  sl_lib_internal = NULL
-  used_params <- list()
-  for (item in sl_lib){
-    wrapper_generated_res <- gen_wrap_sl_lib(lib_name = item, params,
-                                             nthread = nthread)
-    if (wrapper_generated_res[[1]]){
-      sl_lib_internal <- c(sl_lib_internal, paste(item, "_internal", sep=""))
-      used_params <- c(used_params, wrapper_generated_res[[2]])
-    } else {
-      sl_lib_internal <- c(sl_lib_internal, item)
-    }
-  }
-
-
   if (gps_density == "normal"){
     e_gps <- train_it(target = response_data,
                       input = model_data,
-                      sl_lib_internal = sl_lib_internal,
+                      sl_lib_internal = sl_lib,
                       ...)
 
     e_gps_pred <- e_gps$SL.predict
@@ -129,11 +99,11 @@ estimate_gps <- function(data,
 
     e_gps <- train_it(target = response_data,
                       input = model_data,
-                      sl_lib_internal = sl_lib_internal, ...)
+                      sl_lib_internal = sl_lib, ...)
     e_gps_pred <- e_gps$SL.predict
     e_gps_std <- train_it(target = abs(response_data - e_gps_pred),
                           input = model_data,
-                          sl_lib_internal = sl_lib_internal, ...)
+                          sl_lib_internal = sl_lib, ...)
     e_gps_std_pred <- e_gps_std$SL.predict
     w_resid <- compute_resid(response_data,
                              e_gps_pred,e_gps_std_pred)
@@ -185,7 +155,6 @@ estimate_gps <- function(data,
   result <- list()
   class(result) <- "cgps_gps"
   result$dataset <- dataset
-  result$used_params <- used_params
   result$gps_mx <- gps_mx
   result$w_mx <- w_mx
   result$formula <- formula
