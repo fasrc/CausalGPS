@@ -76,7 +76,7 @@ estimate_gps <- function(data,
   # Check if data has missing value(s) -----------------------------------------
   if (sum(is.na(data)) > 0){
     logger::log_warn(
-      "data data.frame has {sum(is.na(c))} missing values.")
+      "data data.frame has {sum(is.na(data))} missing values.")
   }
 
   # Preprocess the data based on the formula
