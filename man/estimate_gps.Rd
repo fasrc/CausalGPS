@@ -5,8 +5,8 @@
 \title{Estimate generalized propensity score (GPS) values}
 \usage{
 estimate_gps(
-  w,
-  c,
+  data,
+  formula,
   gps_density = "normal",
   params = list(),
   sl_lib = c("m_xgboost"),
@@ -15,11 +15,12 @@ estimate_gps(
 )
 }
 \arguments{
-\item{w}{A data frame of observed continuous exposure variable. Including
-\code{id} and \code{w} columns.}
+\item{data}{A data frame of observed continuous exposure variable and
+observed covariates variable. Also includes \code{id} column for future
+references.}
 
-\item{c}{A data frame of observed covariates variable. Also includes \code{id}
-column.}
+\item{formula}{A formula specifying the relationship between the exposure
+variable and the covariates. For example, w ~ I(cf1^2) + cf2.}
 
 \item{gps_density}{Model type which is used for estimating GPS value,
 including \code{normal} (default) and \code{kernel}.}
@@ -37,13 +38,11 @@ in a shared memory system.}
 \value{
 The function returns a S3 object. Including the following:
 \itemize{
-\item \code{dataset }: \code{id}, \code{w}, \code{gps}
-\item e_gps_pred
-\item e_gps_std_pred
-\item w_resid
+\item \code{dataset }: \code{id}, \code{w}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred}, \code{w_resid}
 \item gps_mx (min and max of gps)
 \item w_mx (min and max of w).
 \item used_params
+\item formula
 }
 }
 \description{
@@ -60,12 +59,11 @@ used in compiling the data set with GPS values.
 \examples{
 \donttest{
 m_d <- generate_syn_data(sample_size = 100)
-data_with_gps <- estimate_gps(m_d[, c("id", "w")],
-                              m_d[, c("id", "cf1", "cf2", "cf3",
-                                      "cf4", "cf5", "cf6")],
+data_with_gps <- estimate_gps(data= m_d,
+                              formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
                               gps_density = "normal",
-                              params = list(xgb_max_depth = c(3,4,5),
-                                       xgb_nrounds=c(10,20,30,40,50,60)),
+                              params = list(xgb_max_depth = c(3, 4, 5),
+                                       xgb_nrounds=c(10, 20, 30, 40, 50, 60)),
                               nthread = 1,
                               sl_lib = c("m_xgboost")
                              )

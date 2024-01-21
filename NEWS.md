@@ -1,6 +1,7 @@
 ## CausalGPS (Developing)
 
 ### Added 
+* `estimate_gps` now accepts formula for generating GPS object.
 
 ### Changed 
 
