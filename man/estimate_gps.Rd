@@ -9,6 +9,8 @@ estimate_gps(
   formula,
   gps_density = "normal",
   sl_lib = c("m_xgboost"),
+  exposure_trim_qtls = c(0.01, 0.99),
+  keep_original_data = FALSE,
   ...
 )
 }
@@ -37,6 +39,8 @@ The function returns a S3 object. Including the following:
 \item gps_mx (min and max of gps)
 \item w_mx (min and max of w).
 \item formula
+\item gps_density
+\item sl_lib
 \item fcall
 }
 }

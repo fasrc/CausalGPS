@@ -62,7 +62,7 @@ compile_pseudo_pop <- function(data_obj, ci_appr, gps_density,
                                ...) {
 
   # Checking arguments
-  check_args_compile_pseudo_pop(ci_appr = ci_appr, ...)
+  # check_args_compile_pseudo_pop(ci_appr = ci_appr, ...)
 
   if (!(is.object(data_obj) && !isS4(data_obj))) {
     stop("data_obj should be a S3 object.")

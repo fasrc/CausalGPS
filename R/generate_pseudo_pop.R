@@ -104,20 +104,10 @@
 #'                                   delta_n = 1,
 #'                                   scale = 0.5)
 #'}
-generate_pseudo_pop <- function(w,
-                                c,
-                                ci_appr,
-                                gps_density = "normal",
-                                use_cov_transform = FALSE,
-                                transformers = list("pow2","pow3"),
-                                bin_seq = NULL,
-                                exposure_trim_qtls = c(0.01, 0.99),
-                                gps_trim_qtls = c(0.0, 1.0),
-                                params = list(),
-                                sl_lib = c("m_xgboost"),
-                                nthread = 1,
-                                include_original_data = FALSE,
-                                gps_obj = NULL,
+generate_pseudo_pop <- function(data,
+                                gps_obj,
+                                counter_weight,
+                                covariates,
                                 ...){
 
   # Passing packaging check() ------------------------------
@@ -136,8 +126,8 @@ generate_pseudo_pop <- function(w,
   fcall <- match.call()
 
   # Check arguments ----------------------------------------
-  check_args(ci_appr, use_cov_transform, transformers,
-             gps_density, exposure_trim_qtls, ...)
+  # check_args(ci_appr, use_cov_transform, transformers,
+  #            gps_density, exposure_trim_qtls, ...)
 
   # Generate output set ------------------------------------
   counter <- 0
@@ -150,8 +140,12 @@ generate_pseudo_pop <- function(w,
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
 
-  covariate_cols <- Filter(function(x) x != "id", colnames(c))
-  exposure_col <- Filter(function(x) x != "id", colnames(w))
+  # collect exposure and covariate columns
+  exposure_col <- all.vars(gps_obj$formula)[1]
+  covariate_cols <- covariates
+
+  # join data based on id
+  merged_data <- pseudo_pop <- merge(pseudo_pop, c, by = "id")
 
   prep_results <- preprocess_data(w, c, exposure_trim_qtls, exposure_col)
   tmp_data <- prep_results$preprocessed_data
@@ -500,34 +494,35 @@ transform_it <- function(c_name, c_val, transformer) {
 #' A list with preprocessed and original data.
 #'
 #' @keywords internal
-preprocess_data <- function(w, c, trim_quantiles, exposure_col){
-
-  id_exist_w <- any(colnames(w) %in% "id")
-  if (!id_exist_w) stop("w should include id column.")
-
-  id_exist_c <- any(colnames(c) %in% "id")
-  if (!id_exist_c) stop("c should include id column.")
-
-  merged_data <- merge(w, c, by = "id")
-
-  df1 <- merged_data
-  original_data <- df1
-
-  # get trim quantiles and trim data
-  q1 <- stats::quantile(df1[[exposure_col]], trim_quantiles[1])
-  q2 <- stats::quantile(df1[[exposure_col]], trim_quantiles[2])
-
-  logger::log_debug("{trim_quantiles[1]*100}% quantile for trim: {q1}")
-  logger::log_debug("{trim_quantiles[2]*100}% for trim: {q2}")
-
-  df1 <- df1[stats::complete.cases(df1), ]
-  df1 <- df1[df1[[exposure_col]] <= q2  & df1[[exposure_col]] >= q1, ]
-
-  result = list()
-  result$preprocessed_data <- df1
-  result$original_data <- original_data
-
-  return(result)
-}
+#'
+# preprocess_data <- function(w, c, trim_quantiles, exposure_col){
+#
+#   id_exist_w <- any(colnames(w) %in% "id")
+#   if (!id_exist_w) stop("w should include id column.")
+#
+#   id_exist_c <- any(colnames(c) %in% "id")
+#   if (!id_exist_c) stop("c should include id column.")
+#
+#   merged_data <- merge(w, c, by = "id")
+#
+#   df1 <- merged_data
+#   original_data <- df1
+#
+#   # get trim quantiles and trim data
+#   q1 <- stats::quantile(df1[[exposure_col]], trim_quantiles[1])
+#   q2 <- stats::quantile(df1[[exposure_col]], trim_quantiles[2])
+#
+#   logger::log_debug("{trim_quantiles[1]*100}% quantile for trim: {q1}")
+#   logger::log_debug("{trim_quantiles[2]*100}% for trim: {q2}")
+#
+#   df1 <- df1[stats::complete.cases(df1), ]
+#   df1 <- df1[df1[[exposure_col]] <= q2  & df1[[exposure_col]] >= q1, ]
+#
+#   result = list()
+#   result$preprocessed_data <- df1
+#   result$original_data <- original_data
+#
+#   return(result)
+# }
 
 

@@ -23,6 +23,8 @@
 #'   - gps_mx (min and max of gps)
 #'   - w_mx (min and max of w).
 #'   - formula
+#'   - gps_density
+#'   - sl_lib
 #'   - fcall
 #'
 #'
@@ -41,6 +43,8 @@ estimate_gps <- function(data,
                          formula,
                          gps_density = "normal",
                          sl_lib = c("m_xgboost"),
+                         exposure_trim_qtls = c(0.01, 0.99),
+                         keep_original_data = FALSE,
                          ...) {
 
 
@@ -69,12 +73,18 @@ estimate_gps <- function(data,
       "data data.frame has {sum(is.na(data))} missing values.")
   }
 
+  # trim data
+  response_var = all.vars(formula)[1]
+  original_data <- data
+  data <- trim_it(data, exposure_trim_qtls, response_var)
+
   # Preprocess the data based on the formula
   model_data <- model.matrix(object = formula,
                              data = data)
 
-  response_var = all.vars(formula)[1]
   response_data = data[[response_var]]
+
+
 
   if (gps_density == "normal"){
     e_gps <- train_it(target = response_data,
@@ -154,7 +164,13 @@ estimate_gps <- function(data,
   result$gps_mx <- gps_mx
   result$w_mx <- w_mx
   result$formula <- formula
+  result$gps_density <- gps_density
+  result$sl_lib <- sl_lib
   result$fcall <- fcall
+  result$original_data <- NULL
+  if (keep_original_data) {
+    result$original_data <- original_data
+  }
 
   invisible(result)
 }
