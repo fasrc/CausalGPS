@@ -45,11 +45,6 @@ Input parameters:
  normal (default) and kernel.   
  **`use_cov_transform`** If TRUE, the function uses transformer to meet the
   covariate balance.   
- **`transformers`** A list of transformers. Each transformer should be a
- unary function. You can pass name of customized function in the quotes.   
- Available transformers:   
-   - pow2: to the power of 2   
-   - pow3: to the power of 3   
  **`bin_seq`** Sequence of w (treatment) to generate pseudo population. If
  NULL is passed the default value will be used, which is
  `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
@@ -59,8 +54,6 @@ Input parameters:
  **`gps_trim_qtls`** A numerical vector of two. Represents the trim quantile
  level. Both numbers should be in the range of [0,1] and in increasing order
  (default: c(0.01,0.99)). 
- **`params`** Includes list of params that is used internally. Unrelated
-  parameters will be ignored.   
  **`sl_lib`**: A vector of prediction algorithms. 
  **`nthread`** An integer value that represents the number of threads to be
  used by internal packages.   
@@ -123,15 +116,10 @@ pseudo_pop <- generate_pseudo_pop(w,
 - Estimating GPS
 
 ```r
-data_with_gps <- estimate_gps(w,
-                              c,
+data_with_gps <- estimate_gps(.data,
+                              .formula,
                               gps_density = "normal",
-                              params = list(xgb_nrounds = 50,
-                                            xgb_max_depth = 6,
-                                            xgb_eta = 0.3,
-                                            xgb_min_child_weight = 1),
-                              nthread = 1,                                
-                              sl_lib = c("m_xgboost")
+                              sl_lib = c("SL.xgboost")
                               )
 
 ```

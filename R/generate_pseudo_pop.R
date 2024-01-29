@@ -446,10 +446,6 @@ generate_pseudo_pop <- function(.data,
 # }
 
 
-# transformers
-pow2 <- function(x) {x ^ 2}
-pow3 <- function(x) {x ^ 3}
-
 #' @title
 #' Transform data
 #'
