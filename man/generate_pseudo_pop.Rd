@@ -4,7 +4,7 @@
 \alias{generate_pseudo_pop}
 \title{Generate pseudo population}
 \usage{
-generate_pseudo_pop(data, gps_obj, counter_weight, covariates, ...)
+generate_pseudo_pop(.data, gps_obj, cw_obj, covariates, ...)
 }
 \arguments{
 \item{gps_obj}{A gps object that is generated with \code{estimate_gps} function.

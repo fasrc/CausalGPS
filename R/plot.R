@@ -305,7 +305,7 @@ autoplot.cgps_gps <- function(object, ...){
 
 
   # create a density plot
-  dataset <- object$dataset
+  dataset <- object$.data
 
   g <- ggplot2::ggplot(data = dataset,
                        ggplot2::aes(x = .data$gps)) +

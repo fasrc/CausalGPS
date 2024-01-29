@@ -38,8 +38,8 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
 
-  gps_mx <- data_obj$gps_mx
-  w_mx <- data_obj$w_mx
+  gps_mx <- data_obj$params$gps_mx
+  w_mx <- data_obj$params$w_mx
 
 
     if (is.null(bin_seq)) {
@@ -62,11 +62,11 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
 
     matched_set <-  lapply(bin_num,
                            matching_fn,
-                           dataset=data_obj$dataset,
+                           dataset=data_obj$.data,
                            exposure_col_name = exposure_col_name,
-                           e_gps_pred = data_obj$dataset$e_gps_pred,
-                           e_gps_std_pred = data_obj$dataset$e_gps_std_pred,
-                           w_resid=data_obj$dataset$w_resid,
+                           e_gps_pred = data_obj$.data$e_gps_pred,
+                           e_gps_std_pred = data_obj$.data$e_gps_std_pred,
+                           w_resid=data_obj$.data$w_resid,
                            gps_mx = gps_mx,
                            w_mx = w_mx,
                            dist_measure = dist_measure,
@@ -83,7 +83,7 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
 
     s_comp_p <- proc.time()
 
-    cp_original_data <- data_obj$dataset
+    cp_original_data <- data_obj$.data
 
     # create initial freq_table
     logger::log_debug("Started working on merging the frequency table  ... ")

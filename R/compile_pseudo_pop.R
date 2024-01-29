@@ -68,8 +68,8 @@ compile_pseudo_pop <- function(data_obj, ci_appr, gps_density,
     stop("data_obj should be a S3 object.")
   }
 
-  if (!(is.element("dataset", attributes(data_obj)$names))) {
-    stop("data_obj should have the required dataset field.")
+  if (!(is.element(".data", attributes(data_obj)$names))) {
+    stop("data_obj should have the required .data field.")
   }
 
   logger::log_info("Starting compiling pseudo population ",

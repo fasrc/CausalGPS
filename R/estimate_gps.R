@@ -5,27 +5,27 @@
 #' Estimates GPS value for each observation using normal or kernel
 #' approaches.
 #'
-#' @param data A data frame of observed continuous exposure variable and
+#' @param .data A data frame of observed continuous exposure variable and
 #' observed covariates variable. Also includes `id` column for future
 #' references.
-#' @param formula A formula specifying the relationship between the exposure
+#' @param .formula A formula specifying the relationship between the exposure
 #' variable and the covariates. For example, w ~ I(cf1^2) + cf2.
 #' @param gps_density Model type which is used for estimating GPS value,
 #' including `normal` (default) and `kernel`.
-#' @param params Includes list of parameters that are used internally. Unrelated
-#'  parameters will be ignored.
-#' @param sl_lib A vector of prediction algorithms.
+#' @param sl_lib A vector of prediction algorithms to be used by the
+#' SuperLearner packageg.
 #' @param ...  Additional arguments passed to the model.
 #'
 #' @return
 #' The function returns a S3 object. Including the following:
-#'   - `dataset `: `id`, `w`, `gps`, `e_gps_pred`, `e_gps_std_pred`, `w_resid`
-#'   - gps_mx (min and max of gps)
-#'   - w_mx (min and max of w).
-#'   - formula
-#'   - gps_density
-#'   - sl_lib
-#'   - fcall
+#'   - `.data `: `id`, `w`, `gps`, `e_gps_pred`, `e_gps_std_pred`, `w_resid`
+#'   - `params`: Including the following fields:
+#'     - gps_mx (min and max of gps)
+#'     - w_mx (min and max of w).
+#'     - .formula
+#'     - gps_density
+#'     - sl_lib
+#'     - fcall (function call)
 #'
 #'
 #' @export
@@ -36,26 +36,22 @@
 #' data_with_gps <- estimate_gps(data= m_d,
 #'                               formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
 #'                               gps_density = "normal",
-#'                               sl_lib = c("m_xgboost")
+#'                               sl_lib = c("SL.xgboost")
 #'                              )
 #'}
-estimate_gps <- function(data,
-                         formula,
+estimate_gps <- function(.data,
+                         .formula,
                          gps_density = "normal",
-                         sl_lib = c("m_xgboost"),
-                         exposure_trim_qtls = c(0.01, 0.99),
-                         keep_original_data = FALSE,
+                         sl_lib = c("SL.xgboost"),
                          ...) {
-
 
   start_time <- proc.time()
 
   # Check passed arguments -----------------------------------------------------
   check_args_estimate_gps(gps_density, ...)
 
-
-  id_exist <- any(colnames(data) %in% "id")
-  if (!id_exist) stop("data should include id column.")
+  id_exist <- any(colnames(.data) %in% "id")
+  if (!id_exist) stop(".data should include id column.")
 
   dot_args <- list(...)
   arg_names <- names(dot_args)
@@ -68,23 +64,17 @@ estimate_gps <- function(data,
   fcall <- match.call()
 
   # Check if data has missing value(s) -----------------------------------------
-  if (sum(is.na(data)) > 0){
+  if (sum(is.na(.data)) > 0){
     logger::log_warn(
-      "data data.frame has {sum(is.na(data))} missing values.")
+      "data data.frame has {sum(is.na(.data))} missing values.")
   }
 
-  # trim data
-  response_var = all.vars(formula)[1]
-  original_data <- data
-  data <- trim_it(data, exposure_trim_qtls, response_var)
 
-  # Preprocess the data based on the formula
-  model_data <- model.matrix(object = formula,
-                             data = data)
+  response_var = all.vars(.formula)[1]
+  model_data <- model.matrix(object = .formula,
+                             data = .data)
 
-  response_data = data[[response_var]]
-
-
+  response_data = .data[[response_var]]
 
   if (gps_density == "normal"){
     e_gps <- train_it(target = response_data,
@@ -126,7 +116,7 @@ estimate_gps <- function(data,
   gps_mx <- compute_min_max(gps)
 
   # create new data.frame for output
-  dataset <- data.frame(id = data$id, w = response_data, gps = gps)
+  dataset <- data.frame(id = .data$id, w = response_data, gps = gps)
   dataset$e_gps_pred <- e_gps_pred
   if (length(e_gps_std_pred) == 1){
     e_gps_std_pred <- rep(e_gps_std_pred, nrow(dataset))
@@ -160,17 +150,13 @@ estimate_gps <- function(data,
 
   result <- list()
   class(result) <- "cgps_gps"
-  result$dataset <- dataset
-  result$gps_mx <- gps_mx
-  result$w_mx <- w_mx
-  result$formula <- formula
-  result$gps_density <- gps_density
-  result$sl_lib <- sl_lib
-  result$fcall <- fcall
-  result$original_data <- NULL
-  if (keep_original_data) {
-    result$original_data <- original_data
-  }
+  result$.data <- dataset
+  result$params$gps_mx <- gps_mx
+  result$params$w_mx <- w_mx
+  result$params$.formula <- .formula
+  result$params$gps_density <- gps_density
+  result$params$sl_lib <- sl_lib
+  result$params$fcall <- fcall
 
   invisible(result)
 }

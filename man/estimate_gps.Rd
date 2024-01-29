@@ -5,43 +5,42 @@
 \title{Estimate generalized propensity score (GPS) values}
 \usage{
 estimate_gps(
-  data,
-  formula,
+  .data,
+  .formula,
   gps_density = "normal",
-  sl_lib = c("m_xgboost"),
-  exposure_trim_qtls = c(0.01, 0.99),
-  keep_original_data = FALSE,
+  sl_lib = c("SL.xgboost"),
   ...
 )
 }
 \arguments{
-\item{data}{A data frame of observed continuous exposure variable and
+\item{.data}{A data frame of observed continuous exposure variable and
 observed covariates variable. Also includes \code{id} column for future
 references.}
 
-\item{formula}{A formula specifying the relationship between the exposure
+\item{.formula}{A formula specifying the relationship between the exposure
 variable and the covariates. For example, w ~ I(cf1^2) + cf2.}
 
 \item{gps_density}{Model type which is used for estimating GPS value,
 including \code{normal} (default) and \code{kernel}.}
 
-\item{sl_lib}{A vector of prediction algorithms.}
+\item{sl_lib}{A vector of prediction algorithms to be used by the
+SuperLearner packageg.}
 
 \item{...}{Additional arguments passed to the model.}
-
-\item{params}{Includes list of parameters that are used internally. Unrelated
-parameters will be ignored.}
 }
 \value{
 The function returns a S3 object. Including the following:
 \itemize{
-\item \code{dataset }: \code{id}, \code{w}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred}, \code{w_resid}
+\item \code{.data }: \code{id}, \code{w}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred}, \code{w_resid}
+\item \code{params}: Including the following fields:
+\itemize{
 \item gps_mx (min and max of gps)
 \item w_mx (min and max of w).
-\item formula
+\item .formula
 \item gps_density
 \item sl_lib
-\item fcall
+\item fcall (function call)
+}
 }
 }
 \description{
@@ -54,7 +53,7 @@ m_d <- generate_syn_data(sample_size = 100)
 data_with_gps <- estimate_gps(data= m_d,
                               formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
                               gps_density = "normal",
-                              sl_lib = c("m_xgboost")
+                              sl_lib = c("SL.xgboost")
                              )
 }
 }

@@ -174,9 +174,9 @@ print.cgps_gps <- function(x, ...) {
   cat(" CausalGPS gps object\n")
   cat(" function call: \n")
   cat("      ***       \n")
-  print(x$fcall, ...)
+  print(x$params$fcall, ...)
   cat("      ***       \n")
-  cat(" Output data can be accessed at $dataset \n")
+  cat(" Output data can be accessed at $.data \n")
   cat(" Look at summary for more details.")
 }
 
@@ -195,9 +195,9 @@ summary.cgps_gps <- function(object, ...) {
 
   cat("--- CausalGPS gps object summary --- \n")
   cat("      ***       \n")
-  data_size <- nrow(object$dataset)
+  data_size <- nrow(object$.data)
   cat(paste0("Number of data samples: ", data_size, "\n"))
-  cat(paste0("Used formula: ", deparse(object$formula), "\n"))
+  cat(paste0("Used formula: ", deparse(object$params$.formula), "\n"))
   cat("--- *** --- \n")
 
 }

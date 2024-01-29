@@ -82,8 +82,6 @@
 compute_counter_weight <- function(gps_obj = NULL,
                                    ci_appr,
                                    bin_seq = NULL,
-                                   exposure_trim_qtls = c(0.01, 0.99),
-                                   gps_trim_qtls = c(0.0, 1.0),
                                    nthread = 1,
                                    include_original_data = FALSE,
                                    ...){
@@ -124,19 +122,16 @@ compute_counter_weight <- function(gps_obj = NULL,
     }
   }
 
-  exposure_col <- all.vars(gps_obj$formula)[1]
-  data <- gps_obj$dataset
+  exposure_col <- all.vars(gps_obj$params$.formula)[1]
+  .data <- gps_obj$.data
 
-  # Trim gps -----------------------------------
-  data <- trim_it(data, gps_trim_qtls, "gps")
-  zero_initialize <- rep(0, nrow(data))
-  gps_obj$dataset$counter_weight <- zero_initialize
-
+  zero_initialize <- rep(0, nrow(.data))
+  gps_obj$.data$counter_weight <- zero_initialize
 
 
   if (is.null(bin_seq) && ci_appr == "matching"){
-    min_w <- min(data[[exposure_col]])
-    max_w <- max(data[[exposure_col]])
+    min_w <- min(.data[[exposure_col]])
+    max_w <- max(.data[[exposure_col]])
     start_val <- min_w + delta_n/2
     end_val <- max_w
     if ((start_val < end_val && delta_n < 0) ||
@@ -153,7 +148,7 @@ compute_counter_weight <- function(gps_obj = NULL,
   counter_weighted_data <- compile_pseudo_pop(
                                    data_obj = gps_obj,
                                    ci_appr = ci_appr,
-                                   gps_density = gps_obj$gps_density,
+                                   gps_density = gps_obj$params$gps_density,
                                    bin_seq = bin_seq,
                                    exposure_col_name = exposure_col,
                                    nthread = nthread,
@@ -165,59 +160,62 @@ compute_counter_weight <- function(gps_obj = NULL,
     id = counter_weighted_data$id,
     counter_weight = counter_weighted_data$counter_weight)
 
-  return(counter_weighted_data)
-}
+  result <- list()
+  class(result) <- "cgps_cw"
+  result$.data <- counter_weighted_data
+  result$params$ci_appr <- ci_appr
 
-
-
-#' @title
-#' Preprocess data
-#'
-#' @description
-#' Preprocess data to isolate extra details
-#'
-#' @param data description
-#' @param trim_quntiles description
-#' @param exposure_col Column name that is used for exposure.
-#' @return
-#' A list with preprocessed and original data.
-#'
-#' @keywords internal
-preprocess_data <- function(data, trim_quantiles, exposure_col){
-
-
-  original_data <- data
-
-  # get trim quantiles and trim data
-  q1 <- stats::quantile(data[[exposure_col]], trim_quantiles[1])
-  q2 <- stats::quantile(data[[exposure_col]], trim_quantiles[2])
-
-  logger::log_debug("{trim_quantiles[1]*100}% quantile for trim: {q1}")
-  logger::log_debug("{trim_quantiles[2]*100}% for trim: {q2}")
-
-  data <- data[stats::complete.cases(data), ]
-  data <- data[data[[exposure_col]] <= q2  & data[[exposure_col]] >= q1, ]
-
-  result = list()
-  result$preprocessed_data <- data
-  result$original_data <- original_data
 
   return(result)
 }
 
 
-
-#' Title
+#' @title
+#' Trim a data frame or an S3 object
 #'
-#' @param data
-#' @param trim_quantiles
-#' @param variable
+#' @description
+#' Trims a data frame or an S3 object's `.data` attributs.
+#'
+#'
+#' @param data_obj A data frame or an S3 object containing the data to be
+#' trimmed. For a data frame, the function operates directly on it. For an S3
+#' object, the function expects a `.data` attribute containing the data.
+#' @param trim_quantiles A numeric vector of length 2 specifying the lower and
+#' upper quantiles used for trimming the data.
+#' @param variable The name of the variable in the data on which the trimming is
+#'  to be applied.
 #'
 #' @return
-#' @keywords internal
+#' Returns a trimmed data frame or an S3 object with the $.data attribute
+#' trimmed, depending on the input type.
+#'
+#' @export
 #'
 #' @examples
-trim_it <- function(data, trim_quantiles, variable){
+#'
+#' # Example usage with a data frame
+#' df <- data.frame(id = 1:10, value = rnorm(100))
+#' trimmed_df <- trim_it(df, c(0.1, 0.9), "value")
+#'
+#' # Example usage with an S3 object
+#' data_obj <- list()
+#' class(data_obj) <- "myobject"
+#' data_obj$.data <- df
+#' trimmed_data_obj <- trim_it(data_obj, c(0.1, 0.9), "value")
+#'
+trim_it <- function(data_obj, trim_quantiles, variable){
+
+  type_flag <- NULL
+  if (class(data_obj) == "data.frame"){
+    data <- data_obj
+    type_flag <- "data.frame"
+  } else if (is.object(data_obj) && !isS4(data_obj)){
+    data <- data_obj$.data
+    type_flag <- "s3_obj"
+  } else {
+    stop(paste0("The data_obj with type: ", class(data_obj),
+                " is not supported." ))
+  }
 
   if ((trim_quantiles[1] < 0 || trim_quantiles[1] > 1) ||
       (trim_quantiles[2] < 0 || trim_quantiles[2] > 1) ||
@@ -229,6 +227,9 @@ trim_it <- function(data, trim_quantiles, variable){
   id_exist <- any(colnames(data) %in% "id")
   if (!id_exist) stop("data should include id column.")
 
+  id_exist <- any(colnames(data) %in% variable)
+  if (!id_exist) stop(paste0("data should include the ", variable, " column."))
+
   # get trim quantiles and trim data
   q1 <- stats::quantile(data[[variable]], trim_quantiles[1])
   q2 <- stats::quantile(data[[variable]], trim_quantiles[2])
@@ -236,9 +237,13 @@ trim_it <- function(data, trim_quantiles, variable){
   data <- data[stats::complete.cases(data), ]
   data <- data[data[[variable]] <= q2  & data[[variable]] >= q1, ]
 
-  return(data)
+  if (type_flag == "data.frame"){
+    data_obj <- data
+  } else if (type_flag == "s3_obj") {
+    data_obj$.data <- data
+  }
 
-
+  return(data_obj)
 }
 
 
