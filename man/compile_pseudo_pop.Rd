@@ -8,7 +8,6 @@ compile_pseudo_pop(
   data_obj,
   ci_appr,
   gps_density,
-  bin_seq,
   exposure_col_name,
   nthread,
   ...
@@ -30,16 +29,16 @@ compile_pseudo_pop(
 \item{gps_density}{Model type which is used for estimating GPS value,
 including \code{normal} and \code{kernel}.}
 
-\item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
-
 \item{exposure_col_name}{Exposure data column name.}
 
 \item{nthread}{An integer value that represents the number of threads to be
 used by internal packages.}
 
 \item{...}{Additional parameters.}
+
+\item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
+NULL is passed the default value will be used, which is
+\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
 }
 \value{
 \code{compile_pseudo_pop} returns the pseudo population data that is compiled based

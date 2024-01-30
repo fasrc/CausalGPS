@@ -4,8 +4,8 @@
 #' @description
 #' Generates pseudo population based on weighting casual inference method.
 #'
-#' @param dataset The study data set.
-#' @param ... Additional parameters.
+#' @param dataset TBD
+#' @param exposure_col_name The exposure column name.
 #'
 #' @return
 #' Returns a data table which includes the following columns:
@@ -19,7 +19,7 @@
 #'
 #' @keywords internal
 #'
-create_weighting <- function(dataset, exposure_col_name, ...){
+create_weighting <- function(dataset, exposure_col_name){
 
   if (sum(!is.element(c(exposure_col_name, "gps", "counter_weight", "id"),
                       colnames(dataset))) > 0) {

@@ -77,24 +77,26 @@ check_covar_balance <- function(w,
                                 ci_appr,
                                 counter_weight = NULL,
                                 nthread = 1,
-                                ...){
+                                covar_bl_method = "absolute",
+                                covar_bl_trs = 0.1,
+                                covar_bl_trs_type = "mean"){
 
   # Passing packaging check() ----------------------------
-  covar_bl_method <- NULL
-  covar_bl_trs <- NULL
-  covar_bl_trs_type <- NULL
+  # covar_bl_method <- NULL
+  # covar_bl_trs <- NULL
+  # covar_bl_trs_type <- NULL
   # ------------------------------------------------------
 
   logger::log_debug("Started checking covariate balance ... ")
   s_ccb_t <- proc.time()
 
   # collect additional arguments
-  dot_args <- list(...)
-  arg_names <- names(dot_args)
-
-  for (i in arg_names){
-    assign(i,unlist(dot_args[i], use.names = FALSE))
-  }
+  # dot_args <- list(...)
+  # arg_names <- names(dot_args)
+  #
+  # for (i in arg_names){
+  #   assign(i,unlist(dot_args[i], use.names = FALSE))
+  # }
 
   post_process_abs <- function(abs_cor) {
 

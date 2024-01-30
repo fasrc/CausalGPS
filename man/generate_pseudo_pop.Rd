@@ -4,14 +4,16 @@
 \alias{generate_pseudo_pop}
 \title{Generate pseudo population}
 \usage{
-generate_pseudo_pop(.data, gps_obj, cw_obj, covariates, ...)
+generate_pseudo_pop(
+  .data,
+  cw_obj,
+  covariates,
+  covar_bl_trs = 0.1,
+  covar_bl_trs_type = "maximal",
+  covar_bl_method = "absolute"
+)
 }
 \arguments{
-\item{gps_obj}{A gps object that is generated with \code{estimate_gps} function.
-If it is provided, the number of iteration will forced to 1 (Default: NULL).}
-
-\item{...}{Additional arguments passed to different models.}
-
 \item{w}{A data.frame comprised of two columns: one contains the observed
 exposure variable, and the other is labeled as 'id'. The column for the
 outcome variable can be assigned any name as per your requirements.}
@@ -61,6 +63,11 @@ used by internal packages.}
 
 \item{include_original_data}{If TRUE, includes the original data in the
 outcome.}
+
+\item{gps_obj}{A gps object that is generated with \code{estimate_gps} function.
+If it is provided, the number of iteration will forced to 1 (Default: NULL).}
+
+\item{...}{Additional arguments passed to different models.}
 }
 \value{
 Returns a pseudo population (gpsm_pspop) object that is generated

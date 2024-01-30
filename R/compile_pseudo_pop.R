@@ -57,8 +57,11 @@
 #'                          delta_n = 0.5,
 #'                          scale = 1)
 #'}
-compile_pseudo_pop <- function(data_obj, ci_appr, gps_density,
-                               bin_seq, exposure_col_name, nthread,
+compile_pseudo_pop <- function(data_obj,
+                               ci_appr,
+                               gps_density,
+                               exposure_col_name,
+                               nthread,
                                ...) {
 
   # Checking arguments
@@ -73,23 +76,36 @@ compile_pseudo_pop <- function(data_obj, ci_appr, gps_density,
   }
 
   logger::log_info("Starting compiling pseudo population ",
-                    " (original data size: {nrow(data_obj$dataset)}) ... ")
+                    " (original data size: {nrow(data_obj$.data)}) ... ")
+
+  ## collect additional arguments
+  dot_args <- list(...)
+  arg_names <- names(dot_args)
+
+  for (i in arg_names){
+    assign(i, unlist(dot_args[i], use.names = FALSE))
+  }
+
 
   auxilary_columns <- c("e_gps_pred", "e_gps_std_pred", "w_resid")
   if (ci_appr == 'matching'){
-      matched_set <- create_matching(data_obj,
-                                     exposure_col_name,
-                                     bin_seq,
-                                     gps_density,
-                                     nthread,
-                                     ...)
+      matched_set <- create_matching(.data = data_obj$.data,
+                                     exposure_col_name = exposure_col_name,
+                                     matching_fn = matching_fn,
+                                     dist_measure = dist_measure,
+                                     gps_density = gps_density,
+                                     delta_n = delta_n,
+                                     scale = scale,
+                                     bin_seq = bin_seq,
+                                     nthread = nthread)
       logger::log_info("Finished compiling pseudo population ",
                       " (Pseudo population data size: {nrow(matched_set)})")
       matched_set[, (auxilary_columns) := NULL]
       return(matched_set)
 
   } else if (ci_appr == 'weighting'){
-    weighted_set <- create_weighting(data_obj$dataset, exposure_col_name, ...)
+    weighted_set <- create_weighting(data_obj$.data,
+                                     exposure_col_name)
     logger::log_info("Finished compiling pseudo population ",
                      " (Pseudo population data size: {nrow(weighted_set)})")
     weighted_set[, (auxilary_columns) := NULL]
