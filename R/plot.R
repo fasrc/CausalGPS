@@ -340,3 +340,123 @@ plot.cgps_gps <- function(x, ...) {
   invisible(g)
 }
 
+
+
+#' @title
+#' A helper function for cgps_cw object
+#'
+#' @description
+#' A helper function to plot cgps_cw object using ggplot2 package.
+#'
+#' @param object A cgps_cw object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @return
+#' Returns a ggplot object.
+#'
+#' @export
+#'
+#' @keywords internal
+#' @importFrom ggplot2 autoplot
+#' @importFrom rlang .data
+#'
+autoplot.cgps_cw <- function(object, ...){
+
+  dataset <- object$.data
+
+  # Default values
+  every_n <- 10
+  subset_ids <- NULL
+
+
+  ## collect additional arguments
+  dot_args <- list(...)
+  arg_names <- names(dot_args)
+
+  for (i in arg_names) {
+    assign(i, unlist(dot_args[i], use.names = FALSE))
+  }
+
+
+  min_id <- min(dataset$id)
+  max_id <- max(dataset$id)
+
+  if (is.null(subset_ids)){
+    subset_data <- dataset
+    used_min_id <- min_id
+    used_max_id <- max_id
+  } else {
+    if (!all(is.integer(as.integer(subset_ids))) || (length(subset_ids) != 2)) {
+      stop("subset_ids should be a numerical vector of length 2.")
+    }
+
+    if ((subset_ids[1] > subset_ids[2])
+        || (subset_ids[1] > max_id)
+        || (subset_ids[2] < min_id)){
+      stop(paste0("Provided subset_ids: [", subset_ids[1], ",", subset_ids[2],
+                  "] is out of valid range of ",
+                  " [", min_id, "," , max_id, "]"))
+    }
+
+    if (subset_ids[1] < min_id){
+      warning(paste0("The minimum id value in the data is: ", min_id))
+      used_min_id <- min_id
+    } else {
+      used_min_id <- subset_ids[1]
+    }
+    if (subset_ids[2] > max_id){
+      warning(paste0("The maximum id value in the data is: ", max_id))
+      used_max_id <- max_id
+    } else {
+      used_max_id <- subset_ids[2]
+    }
+    subset_data <- dataset[dataset$id >= used_min_id & dataset$id <= used_max_id,]
+  }
+  # subset_data <- my_data[my_data$id >= subset_ids[1] & my_data$id <= subset_ids[2],]
+
+  y_label <- ifelse(object$params$ci_appr == "matching", "Count", "Weight")
+  plot_title <- paste0("Displaying the ", y_label,
+                       " for ID in the range of [", used_min_id, ", ",
+                       used_max_id,"]. Label is plotted at every ", every_n, " intervals.")
+
+  g <- ggplot(data = subset_data, aes(x = as.factor(id), y = counter_weight)) +
+    geom_point(shape = "|", color = "blue", size = 2) +
+    geom_segment(aes(xend = as.factor(id), yend = 0), color = "red", linewidth = 0.2) +
+    labs(x = "ID", y = y_label, title = plot_title) +
+    theme_minimal() +
+    coord_flip()
+
+  if (every_n > 1){
+  g <- g + scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
+  }
+
+  return(g)
+}
+
+
+#' @title
+#' Extend generic plot functions for cgps_cw class
+#'
+#' @description
+#' A wrapper function to extend generic plot functions for cgps_cw class.
+#'
+#' @param x  A cgps_cw object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @details
+#' Additional parameters:
+#' - *every_n*: Puts label to ID at every n interval (default = 10)
+#' - *subset_id*: A vector of range of ids to be included in the plot
+#' (default = NULL)
+#'
+#' @return
+#' Returns a ggplot2 object, invisibly. This function is called for side effects.
+#'
+#' @export
+#'
+plot.cgps_cw <- function(x, ...) {
+  g <- ggplot2::autoplot(x, ...)
+  print(g)
+  invisible(g)
+}
+

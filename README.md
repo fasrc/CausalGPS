@@ -43,8 +43,6 @@ Input parameters:
    - "weighting": Weighting by GPS   
  **`gps_density`** Model type which is used for estimating GPS value, including
  normal (default) and kernel.   
- **`use_cov_transform`** If TRUE, the function uses transformer to meet the
-  covariate balance.   
  **`bin_seq`** Sequence of w (treatment) to generate pseudo population. If
  NULL is passed the default value will be used, which is
  `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
