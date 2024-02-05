@@ -19,7 +19,7 @@ print.gpsm_erf <- function(x, ...) {
   print(x$fcall, ...)
   cat("      ***       \n")
   cat(" Output data can be accessed at $erf \n")
-  cat(" Look at summary for more details.")
+  cat(" Look at summary for more details.\n")
 }
 
 
@@ -58,6 +58,7 @@ summary.gpsm_erf <- function(object, ...) {
   cat("\nOutput data: \n")
   cat(paste("  erf\n"))
   cat_list(object$erf)
+  cat("\n")
 }
 
 
@@ -82,7 +83,7 @@ print.gpsm_pspop <- function(x, ...) {
   print(x$fcall, ...)
   cat("      ***       \n")
   cat(" Output data can be accessed at $pseudo_pop \n")
-  cat(" Look at summary for more details.")
+  cat(" Look at summary for more details. \n")
 }
 
 
@@ -177,7 +178,7 @@ print.cgps_gps <- function(x, ...) {
   print(x$params$fcall, ...)
   cat("      ***       \n")
   cat(" Output data can be accessed at $.data \n")
-  cat(" Look at summary for more details.")
+  cat(" Look at summary for more details. \n")
 }
 
 
