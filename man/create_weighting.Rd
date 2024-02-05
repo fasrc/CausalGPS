@@ -7,7 +7,7 @@
 create_weighting(dataset, exposure_col_name)
 }
 \arguments{
-\item{dataset}{TBD}
+\item{dataset}{A gps object data.}
 
 \item{exposure_col_name}{The exposure column name.}
 }

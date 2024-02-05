@@ -66,7 +66,6 @@
 #'                                         counter = pseudo_pop$pseudo_pop[,
 #'                                                     c("counter_weight")],
 #'                                         ci_appr = "matching",
-#'                                         nthread = 1,
 #'                                         covar_bl_method = "absolute",
 #'                                         covar_bl_trs = 0.1,
 #'                                         covar_bl_trs_type = "mean")
@@ -76,7 +75,6 @@ check_covar_balance <- function(w,
                                 c,
                                 ci_appr,
                                 counter_weight = NULL,
-                                nthread = 1,
                                 covar_bl_method = "absolute",
                                 covar_bl_trs = 0.1,
                                 covar_bl_trs_type = "mean"){
