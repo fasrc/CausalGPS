@@ -412,12 +412,24 @@ autoplot.cgps_cw <- function(object, ...){
     }
     subset_data <- dataset[dataset$id >= used_min_id & dataset$id <= used_max_id,]
   }
-  # subset_data <- my_data[my_data$id >= subset_ids[1] & my_data$id <= subset_ids[2],]
 
-  y_label <- ifelse(object$params$ci_appr == "matching", "Count", "Weight")
-  plot_title <- paste0("Displaying the ", y_label,
-                       " for ID in the range of [", used_min_id, ", ",
-                       used_max_id,"]. Label is plotted at every ", every_n, " intervals.")
+  if (object$params$ci_appr == "matching") {
+    hist_density_plot <- ggplot(subset_data, aes(x = counter_weight)) +
+      geom_histogram(bandwidth = 1, fill = "blue", color = "black") +
+      labs(x = "Count", y = "Frequency") +
+      theme_minimal()
+    y_label <- "Count"
+  } else if (object$params$ci_appr == "weighting") {
+    hist_density_plot <- ggplot(subset_data, aes(x = counter_weight)) +
+      geom_density(fill = "blue", color = "black") +
+      labs(x = "Weight  (displayed in log10 scale)", y = "Density") +
+      theme_minimal() + scale_x_log10()
+    y_label <- "Weight"
+  } else {
+    stop("The cgsp_cw object is not generated properly.")
+  }
+
+  plot_title <- paste0("Displaying the ", y_label)
 
   g <- ggplot(data = subset_data, aes(x = as.factor(id), y = counter_weight)) +
     geom_point(shape = "|", color = "blue", size = 2) +
@@ -427,8 +439,15 @@ autoplot.cgps_cw <- function(object, ...){
     coord_flip()
 
   if (every_n > 1){
-  g <- g + scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
+    g <- g + scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
   }
+
+  g <- cowplot::plot_grid(
+    g, hist_density_plot,
+    ncol = 2,
+    rel_widths = c(1, 1)
+  )
+
 
   return(g)
 }
