@@ -202,3 +202,40 @@ summary.cgps_gps <- function(object, ...) {
   cat("--- *** --- \n")
 
 }
+
+
+
+#' @title
+#' Extend print function for cgps_cw object
+#'
+#' @param x A cgps_cw object.
+#' @param ... Additional arguments passed to customize the results.
+#'
+#' @return
+#' No return value. This function is called for side effects.
+#'
+#' @export
+#'
+print.cgps_cw <- function(x, ...) {
+
+  x <- unclass(x)
+
+  cat(" TBD\n")
+}
+
+
+#' @title
+#' print summary of cgps_cw object
+
+#'
+#' @param object A cgps_cw object.
+#' @param ... Additional arguments passed to customize the results.
+#'
+#' @return
+#' Returns summary of data
+#' @export
+summary.cgps_cw <- function(object, ...) {
+
+  object <- unclass(object)
+  cat("TBD \n")
+}
