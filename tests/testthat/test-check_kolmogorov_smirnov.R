@@ -45,10 +45,9 @@ test_that("check_kolmogorov_smirnov works as expected.", {
                                  covar_bl_trs_type = "maximal",
                                  covar_bl_method = "absolute")
 
-  output <- CausalGPS:::check_kolmogorov_smirnov(w = ps_pop1$pseudo_pop[, c("w")],
-                                                 c = ps_pop1$pseudo_pop[ ,
-                                                                         ps_pop1$covariate_col_names],
-                                                 counter = ps_pop1$pseudo_pop[, c("counter_weight")],
+  output <- CausalGPS:::check_kolmogorov_smirnov(w = ps_pop1$.data[, c("w")],
+                                                 c = ps_pop1$.data[, ps_pop1$params$covariate_col_names],
+                                                 counter = ps_pop1$.data[, c("counter_weight")],
                                                  ci_appr="matching",
                                                  nthread=1)
 

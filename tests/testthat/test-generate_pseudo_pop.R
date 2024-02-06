@@ -51,22 +51,21 @@ test_that("generate_pseudo_pop works as expected.", {
                                   covar_bl_trs_type = "maximal",
                                   covar_bl_method = "absolute")
 
-  expect_equal(class(ps_pop1),"gpsm_pspop")
-  expect_false(ps_pop1$passed_covar_test)
-  expect_equal(nrow(ps_pop1$pseudo_pop), 500)
-  expect_equal(ps_pop1$adjusted_corr_results$mean_absolute_corr,
+  expect_equal(class(ps_pop1),"cgps_pspop")
+  expect_false(ps_pop1$params$passed_covar_test)
+  expect_equal(nrow(ps_pop1$.data), 500)
+  expect_equal(ps_pop1$params$adjusted_corr_results$mean_absolute_corr,
                0.2225003,
                tolerance = 0.000001)
 
   # Test if all required attributes are included in the final object.
-  expect_true(("params" %in% names(ps_pop1)))
-  expect_true(("pseudo_pop" %in% names(ps_pop1)))
-  expect_true(("adjusted_corr_results" %in% names(ps_pop1)))
-  expect_true(("original_corr_results" %in% names(ps_pop1)))
-  expect_true(("fcall" %in% names(ps_pop1)))
-  expect_true(("passed_covar_test" %in% names(ps_pop1)))
-  expect_true(("ci_appr" %in% names(ps_pop1)))
-  expect_true(("covariate_col_names" %in% names(ps_pop1)))
+  expect_true((".data" %in% names(ps_pop1)))
+  expect_true(("adjusted_corr_results" %in% names(ps_pop1$params)))
+  expect_true(("original_corr_results" %in% names(ps_pop1$params)))
+  expect_true(("fcall" %in% names(ps_pop1$params)))
+  expect_true(("passed_covar_test" %in% names(ps_pop1$params)))
+  expect_true(("ci_appr" %in% names(ps_pop1$params)))
+  expect_true(("covariate_col_names" %in% names(ps_pop1$params)))
 
   })
 

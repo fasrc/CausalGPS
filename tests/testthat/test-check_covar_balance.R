@@ -50,10 +50,10 @@ ps_pop1 <- generate_pseudo_pop(.data = s_data,
 
 
 confounders <- paste0("cf", seq(1,6))
-val1 <- check_covar_balance(w = ps_pop1$pseudo_pop[, c("w")],
-                            c = ps_pop1$pseudo_pop[, confounders],
+val1 <- check_covar_balance(w = ps_pop1$.data[, c("w")],
+                            c = ps_pop1$.data[, confounders],
                             ci_appr = "matching",
-                            counter_weight = ps_pop1$pseudo_pop[, c("counter_weight")],
+                            counter_weight = ps_pop1$.data[, c("counter_weight")],
                             covar_bl_method="absolute",
                             covar_bl_trs=0.3,
                             covar_bl_trs_type="mean")
@@ -65,10 +65,10 @@ val1 <- check_covar_balance(w = ps_pop1$pseudo_pop[, c("w")],
 
 
 expect_true(val1$pass)
-val2 <- check_covar_balance(w = ps_pop1$pseudo_pop[, c("w")],
-                            c = ps_pop1$pseudo_pop[, confounders],
+val2 <- check_covar_balance(w = ps_pop1$.data[, c("w")],
+                            c = ps_pop1$.data[, confounders],
                             ci_appr = "matching",
-                            counter_weight = ps_pop1$pseudo_pop[, c("counter_weight")],
+                            counter_weight = ps_pop1$.data[, c("counter_weight")],
                             covar_bl_method="absolute",
                             covar_bl_trs=0.1,
                             covar_bl_trs_type="mean")
