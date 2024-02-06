@@ -75,12 +75,12 @@ plot.gpsm_erf <- function(x, ...) {
 
 
 #' @title
-#' A helper function for gpsm_pspop object
+#' A helper function for cgps_pspop object
 #'
 #' @description
-#' A helper function to plot gpsm_pspop object using ggplot2 package.
+#' A helper function to plot cgps_pspop object using ggplot2 package.
 #'
-#' @param object A gpsm_pspop object.
+#' @param object A cgps_pspop object.
 #' @param ... Additional arguments passed to customize the plot.
 #'
 #' @return
@@ -92,7 +92,7 @@ plot.gpsm_erf <- function(x, ...) {
 #' @importFrom ggplot2 autoplot
 #' @importFrom rlang .data
 #'
-autoplot.gpsm_pspop <- function(object, ...){
+autoplot.cgps_pspop <- function(object, ...){
 
   gg_labs <- gg_title <- include_details <- NULL
 
@@ -113,8 +113,8 @@ autoplot.gpsm_pspop <- function(object, ...){
   }
 
   # create a data.frame from two data.
-  balance <- data.frame(original = object$original_corr_results$absolute_corr,
-                        adjusted = object$adjusted_corr_results$absolute_corr)
+  balance <- data.frame(original = object$params$original_corr_results$absolute_corr,
+                        adjusted = object$params$adjusted_corr_results$absolute_corr)
 
   # Convert row names in to attribute.
   balance$covar_label <- row.names(balance)
@@ -142,7 +142,7 @@ autoplot.gpsm_pspop <- function(object, ...){
     ggplot2::theme_bw() +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
     ggplot2::geom_vline(xintercept = object$params$covar_bl_trs) +
-    ggplot2::geom_vline(xintercept = object$adjusted_corr_results$mean_absolute_corr,
+    ggplot2::geom_vline(xintercept = object$params$adjusted_corr_results$mean_absolute_corr,
                         linetype="dotdash") +
     ggplot2::labs(x = default_gg_labs$x, y = default_gg_labs$y) +
     ggplot2::ggtitle(default_gg_title)
@@ -178,21 +178,12 @@ autoplot.gpsm_pspop <- function(object, ...){
                          object$params$ci_appr)
     if (object$params$ci_appr == "matching"){
       object_sum <- paste0(object_sum, "\n", " scale: ",
-                           round(object$params$scale, 3))
+                           round(object$params$cw_obj_params$scale, 3))
       object_sum <- paste0(object_sum, "\n", " delta: ",
-                           round(object$params$delta, 3))
+                           round(object$params$cw_obj_params$delta, 3))
       object_sum <- paste0(object_sum, "\n", " dist measure: ",
-                           object$params$dist_measure)
+                           object$params$cw_obj_params$dist_measure)
     }
-    object_sum <- paste0(object_sum, "\n", "exposure trim qtls: ",
-                         round(object$exposure_trim_qtls[1],3), ", ",
-                         round(object$exposure_trim_qtls[2],3), ")")
-    object_sum <- paste0(object_sum, "\n", "gps trim qtls: ",
-                         "(",
-                         round(object$gps_trim_qtls[1],3), ", ",
-                         round(object$gps_trim_qtls[2],3), ")")
-    object_sum <- paste0(object_sum, "\n", "# sample (trimmed/org): ",
-                         nrow(object$pseudo_pop), "/", object$original_data_size)
     object_sum <- paste0(object_sum, "\n", "--------------")
     object_sum <- paste0(object_sum, "\n", "Covar balance method: ",
                          object$params$covar_bl_method)
@@ -201,33 +192,18 @@ autoplot.gpsm_pspop <- function(object, ...){
     object_sum <- paste0(object_sum, "\n", " Threshhold value: ",
                          round(object$params$covar_bl_trs, 3))
     object_sum <- paste0(object_sum, "\n", " Passed covariate test: ",
-                         object$passed_covar_test)
+                         object$params$passed_covar_test)
     object_sum <- paste0(object_sum, "\n", " Maximal abs. cov.: ",
-                         round(object$adjusted_corr_results$maximal_absolute_corr, 3))
+                         round(object$params$adjusted_corr_results$maximal_absolute_corr, 3))
     object_sum <- paste0(object_sum, "\n", " Median abs. cov.: ",
-                         round(object$adjusted_corr_results$median_absolute_corr, 3))
+                         round(object$params$adjusted_corr_results$median_absolute_corr, 3))
     object_sum <- paste0(object_sum, "\n", " Mean abs. cov.: ",
-                         round(object$adjusted_corr_results$mean_absolute_corr, 3))
-    object_sum <- paste0(object_sum, "\n", " Number of attemtps: ",
-                         object$counter, "/",
-                         object$params$max_attempt)
-    object_sum <- paste0(object_sum, "\n", " Use cov transform: ",
-                         object$use_cov_transform)
+                         round(object$params$adjusted_corr_results$mean_absolute_corr, 3))
     object_sum <- paste0(object_sum, "\n", "--------------")
     object_sum <- paste0(object_sum, "\n", "Kolmogorov Smirnov Test")
-    object_sum <- paste0(object_sum, "\n", " ess: ", round(object$ess,3))
-    object_sum <- paste0(object_sum, "\n", " ess (min recomennded):", round(object$ess_recommended,3))
-    n_gps_param <- length(object$best_gps_used_params)
+    object_sum <- paste0(object_sum, "\n", " ess: ", round(object$params$ess,3))
+    object_sum <- paste0(object_sum, "\n", " ess (min recomennded):", round(object$params$ess_recommended,3))
 
-    if (n_gps_param > 0) {
-      gps_params <- object$best_gps_used_params
-      object_sum <- paste0(object_sum, "\n", "--------------")
-      object_sum <- paste0(object_sum, "\n", "SL params")
-      for (item in seq(1,n_gps_param)){
-        object_sum <- paste0(object_sum, "\n  ", names(gps_params[item]),": ",
-                             round(gps_params[[item]],5))
-      }
-    }
 
     text_grob <- cowplot::ggdraw() + cowplot::draw_label(object_sum,
                                                          fontface = 'plain',
@@ -251,12 +227,12 @@ autoplot.gpsm_pspop <- function(object, ...){
 }
 
 #' @title
-#' Extend generic plot functions for gpsm_erf class
+#' Extend generic plot functions for cgps_pspop class
 #'
 #' @description
-#' A wrapper function to extend generic plot functions for gpsm_erf class.
+#' A wrapper function to extend generic plot functions for cgps_pspop class.
 #'
-#' @param x  A gpsm_erf object.
+#' @param x  A cgps_pspop object.
 #' @param ... Additional arguments passed to customize the plot.
 #' @details
 #' ## Additional parameters
@@ -267,7 +243,7 @@ autoplot.gpsm_pspop <- function(object, ...){
 #'
 #' @export
 #'
-plot.gpsm_pspop <- function(x, ...) {
+plot.cgps_pspop <- function(x, ...) {
   g <- ggplot2::autoplot(x, ...)
   print(g)
   invisible(g)

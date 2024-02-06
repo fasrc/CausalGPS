@@ -16,7 +16,7 @@
 #' @param covariate_column_names A list of covariate columns.
 #' @param covar_bl_method Covariate balance method.
 #' @param covar_bl_trs: Covariate balance threshold
-#' @param max_attempt: Maximum number of attempt to satisfy covariate balance.
+#' @param covar_bl_trs_type: Type of the covariance balance threshold.
 #'
 #' @return
 #' Returns a pseudo population (gpsm_pspop) object that is generated
@@ -153,7 +153,7 @@ generate_pseudo_pop <- function(.data,
   }
 
   result <- list()
-  class(result) <- "gpsm_pspop"
+  class(result) <- "cgps_pspop"
 
   result$params$ci_appr <- cw_obj$params$ci_appr
   #result$params$params <- params
@@ -168,16 +168,20 @@ generate_pseudo_pop <- function(.data,
 
   # result$original_data_size <- nrow(original_data)
 
-  result$pseudo_pop <- merged_data
-  result$adjusted_corr_results <- adjusted_corr_obj$corr_results
-  result$original_corr_results <- original_corr_obj$corr_results
-  result$ks_stats <- ks_stats
-  result$fcall <- fcall
-  result$passed_covar_test <- adjusted_corr_obj$pass
-  result$ci_appr <- cw_obj$params$ci_appr
-  result$covariate_col_names <- unlist(covariate_cols)
-  result$ess <- ess
-  result$ess_recommended <- ess_recommended
+  result$.data <- merged_data
+  result$params$adjusted_corr_results <- adjusted_corr_obj$corr_results
+  result$params$original_corr_results <- original_corr_obj$corr_results
+  result$params$ks_stats <- ks_stats
+  result$params$fcall <- fcall
+  result$params$passed_covar_test <- adjusted_corr_obj$pass
+  result$params$ci_appr <- cw_obj$params$ci_appr
+  result$params$covariate_col_names <- unlist(covariate_cols)
+  result$params$ess <- ess
+  result$params$ess_recommended <- ess_recommended
+  result$params$covar_bl_trs <- covar_bl_trs
+  result$params$covar_bl_trs_type <- covar_bl_trs_type
+  result$params$covar_bl_method <- covar_bl_method
+  result$params$cw_obj_params <- cw_obj$params
 
   end_time_gpp <- proc.time()
 
