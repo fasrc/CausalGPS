@@ -71,8 +71,8 @@ estimate_gps <- function(.data,
 
 
   response_var = all.vars(.formula)[1]
-  model_data <- model.matrix(object = .formula,
-                             data = .data)
+  model_data <- stats::model.matrix(object = .formula,
+                                    data = .data)
 
   response_data = .data[[response_var]]
 

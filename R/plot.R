@@ -390,16 +390,21 @@ autoplot.cgps_cw <- function(object, ...){
   }
 
   if (object$params$ci_appr == "matching") {
-    hist_density_plot <- ggplot(subset_data, aes(x = counter_weight)) +
-      geom_histogram(bandwidth = 1, fill = "blue", color = "black") +
-      labs(x = "Count", y = "Frequency") +
-      theme_minimal()
+    hist_density_plot <- ggplot2::ggplot(subset_data,
+                                         ggplot2::aes(x = counter_weight)) +
+                         ggplot2::geom_histogram(bandwidth = 1,
+                                                 fill = "blue",
+                                                 color = "black") +
+                         ggplot2::labs(x = "Count", y = "Frequency") +
+                         ggplot2::theme_minimal()
     y_label <- "Count"
   } else if (object$params$ci_appr == "weighting") {
-    hist_density_plot <- ggplot(subset_data, aes(x = counter_weight)) +
-      geom_density(fill = "blue", color = "black") +
-      labs(x = "Weight  (displayed in log10 scale)", y = "Density") +
-      theme_minimal() + scale_x_log10()
+    hist_density_plot <- ggplot2::ggplot(subset_data,
+                                        ggplot2::aes(x = counter_weight)) +
+                         ggplot2::geom_density(fill = "blue", color = "black") +
+                         ggplot2::labs(x = "Weight  (displayed in log10 scale)",
+                                       y = "Density") +
+                         ggplot2::theme_minimal() + ggplot2::scale_x_log10()
     y_label <- "Weight"
   } else {
     stop("The cgsp_cw object is not generated properly.")
@@ -407,15 +412,17 @@ autoplot.cgps_cw <- function(object, ...){
 
   plot_title <- paste0("Displaying the ", y_label)
 
-  g <- ggplot(data = subset_data, aes(x = as.factor(id), y = counter_weight)) +
-    geom_point(shape = "|", color = "blue", size = 2) +
-    geom_segment(aes(xend = as.factor(id), yend = 0), color = "red", linewidth = 0.2) +
-    labs(x = "ID", y = y_label, title = plot_title) +
-    theme_minimal() +
-    coord_flip()
+  g <- ggplot2::ggplot(data = subset_data, ggplot2::aes(x = as.factor(id),
+                                               y = counter_weight)) +
+       ggplot2::geom_point(shape = "|", color = "blue", size = 2) +
+       ggplot2::geom_segment(ggplot2::aes(xend = as.factor(id), yend = 0),
+                             color = "red", linewidth = 0.2) +
+       ggplot2::labs(x = "ID", y = y_label, title = plot_title) +
+       ggplot2::theme_minimal() +
+       ggplot2::coord_flip()
 
   if (every_n > 1){
-    g <- g + scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
+    g <- g + ggplot2::scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
   }
 
   g <- cowplot::plot_grid(
@@ -455,3 +462,77 @@ plot.cgps_cw <- function(x, ...) {
   invisible(g)
 }
 
+
+
+
+#' @title
+#' A helper function for cgps_erf object
+#'
+#' @description
+#' A helper function to plot cgps_erf object using ggplot2 package.
+#'
+#' @param object A cgps_erf object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @return
+#' Returns a ggplot object.
+#'
+#' @export
+#'
+#' @keywords internal
+#' @importFrom ggplot2 autoplot
+#' @importFrom rlang .data
+#'
+autoplot.cgps_erf <- function(object, ...){
+
+  df1 <- object$.data_original
+  df2 <- object$.data_prediction
+
+  # Default values
+
+
+  ## collect additional arguments
+  dot_args <- list(...)
+  arg_names <- names(dot_args)
+
+  for (i in arg_names) {
+    assign(i, unlist(dot_args[i], use.names = FALSE))
+  }
+
+  g <- ggplot() +
+    ggplot2::geom_point(data = df1, aes(x, y_original, size=normalized_weight),
+                        color="blue", alpha=0.1) +
+    ggplot2::geom_line(data = df2, aes(w_vals, y_pred), color = "orange") +
+    ggplot2::geom_point(data = df2, aes(w_vals, y_pred), color = "orange") +
+    ggplot2::labs(x = "Exposure",
+                  y = "Outcome") +
+    ggplot2::ggtitle(paste0("Exposure Response Curve for ",
+                            object$params$model_type, " model")) +
+    ggplot2::theme_bw()
+
+  return(g)
+}
+
+
+#' @title
+#' Extend generic plot functions for cgps_cw class
+#'
+#' @description
+#' A wrapper function to extend generic plot functions for cgps_cw class.
+#'
+#' @param x  A cgps_erf object.
+#' @param ... Additional arguments passed to customize the plot.
+#'
+#' @details
+#' TBD
+#'
+#' @return
+#' Returns a ggplot2 object, invisibly. This function is called for side effects.
+#'
+#' @export
+#'
+plot.cgps_erf <- function(x, ...) {
+  g <- ggplot2::autoplot(x, ...)
+  print(g)
+  invisible(g)
+}

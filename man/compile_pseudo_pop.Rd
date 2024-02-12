@@ -52,12 +52,22 @@ value.
 \donttest{
 set.seed(112)
 m_d <- generate_syn_data(sample_size = 100)
-data_with_gps <- estimate_gps(m_d[, c("id", "w")],
-                              m_d[, c("id", "cf1","cf2","cf3","cf4","cf5","cf6")],
+
+m_xgboost <- function(nthread = 1,
+                      ntrees = 35,
+                      shrinkage = 0.3,
+                      max_depth = 5,
+                      ...) {SuperLearner::SL.xgboost(
+                        nthread = nthread,
+                        ntrees = ntrees,
+                        shrinkage=shrinkage,
+                        max_depth=max_depth,
+                        ...)}
+
+data_with_gps <- estimate_gps(.data = m_d,
+                              .formula = w ~ cf1 + cf2 + cf3 +
+                                             cf4 + cf5 + cf6,
                               gps_density = "normal",
-                              params = list(xgb_max_depth = c(3,4,5),
-                                       xgb_nrounds=c(10,20,30,40,50,60)),
-                              nthread = 1,
                               sl_lib = c("m_xgboost")
                              )
 

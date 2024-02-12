@@ -13,7 +13,6 @@
 #' - \code{mean_absolute_corr}: the average absolute correlations for all
 #'  pre-exposure covariates.
 #'
-#' @importFrom stats median
 #' @export
 #' @examples
 #' set.seed(291)

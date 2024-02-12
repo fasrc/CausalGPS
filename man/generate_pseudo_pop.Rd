@@ -30,7 +30,7 @@ generate_pseudo_pop(
 
 \item{covar_bl_trs:}{Covariate balance threshold}
 
-\item{max_attempt:}{Maximum number of attempt to satisfy covariate balance.}
+\item{covar_bl_trs_type:}{Type of the covariance balance threshold.}
 }
 \value{
 Returns a pseudo population (gpsm_pspop) object that is generated
