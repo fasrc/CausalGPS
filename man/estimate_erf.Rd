@@ -7,22 +7,34 @@
 estimate_erf(.data, .formula, weights_col_name, model_type, w_vals, ...)
 }
 \arguments{
-\item{.data}{TBD}
+\item{.data}{A data frame containing an observed continuous exposure variable, weights,
+and an observed outcome variable. Includes an \code{id} column for future
+reference.}
 
-\item{.formula}{TBD}
+\item{.formula}{A formula specifying the relationship between the exposure
+variable and the outcome variable. For example, Y ~ w.}
 
-\item{weights_col_name}{TBD}
+\item{weights_col_name}{A string representing the weight or counter column
+name in \code{.data}.}
 
-\item{model_type}{tBD}
+\item{model_type}{A string representing the model type based on preliminary
+assumptions, including \code{parametric}, \code{semiparametric}, and \code{nonparametric}
+models.}
 
-\item{...}{TBD}
+\item{w_vals}{A numeric vector of values at which you want to calculate the
+ERF.}
+
+\item{...}{Additional arguments passed to the model.}
 }
 \value{
-TBD
+Returns an S3 object containing the following data and parameters:
+\itemize{
+\item .data_original <- result_data_original
+\item .data_prediction <- result_data_prediction
+\item params
+}
 }
 \description{
-A short description...
-}
-\examples{
-TBD
+Estimates the exposure-response function (ERF) for a matched and weighted
+dataset using parametric, semiparametric, and nonparametric models.
 }
