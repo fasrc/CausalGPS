@@ -4,7 +4,7 @@
 \alias{check_kolmogorov_smirnov}
 \title{Check Kolmogorov-Smirnov (KS) statistics}
 \usage{
-check_kolmogorov_smirnov(w, c, ci_appr, counter_weight = NULL, nthread = 1)
+check_kolmogorov_smirnov(w, c, ci_appr, counter_weight = NULL)
 }
 \arguments{
 \item{w}{A vector of observed continuous exposure variable.}
@@ -16,8 +16,6 @@ check_kolmogorov_smirnov(w, c, ci_appr, counter_weight = NULL, nthread = 1)
 \item{counter_weight}{A weight vector in different situations. If the
 matching approach is selected, it is an integer data.table of counters.
 In the case of the weighting approach, it is weight data.table.}
-
-\item{nthread}{The number of available threads.}
 }
 \value{
 output object is list including:

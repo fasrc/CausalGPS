@@ -25,9 +25,12 @@ check_covar_balance(
 matching approach is selected, it is an integer data.table of counters.
 In the case of the weighting approach, it is weight data.table.}
 
-\item{nthread}{The number of available threads.}
+\item{covar_bl_method}{Covariate balance method. Available options:
+- 'absolute'}
 
-\item{...}{Additional arguments passed to different models.}
+\item{covar_bl_trs}{Covariate balance threshold.}
+
+\item{covar_bl_trs_type}{Covariate balance type (mean, median, maximal).}
 }
 \value{
 output object:
@@ -42,17 +45,6 @@ output object:
 }
 \description{
 Checks the covariate balance of original population or pseudo population.
-}
-\details{
-\subsection{Additional parameters}{
-\itemize{
-\item For ci_appr == matching:
-\itemize{
-\item covar_bl_method
-\item covar_bl_trs
-}
-}
-}
 }
 \examples{
 \donttest{

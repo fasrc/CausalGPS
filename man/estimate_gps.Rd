@@ -50,8 +50,8 @@ approaches.
 \examples{
 \donttest{
 m_d <- generate_syn_data(sample_size = 100)
-data_with_gps <- estimate_gps(data= m_d,
-                              formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
+data_with_gps <- estimate_gps(.data = m_d,
+                              .formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
                               gps_density = "normal",
                               sl_lib = c("SL.xgboost")
                              )

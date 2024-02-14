@@ -9,9 +9,6 @@
 #' @param ci_appr The causal inference approach. Possible values are:
 #'   - "matching": Matching by GPS
 #'   - "weighting": Weighting by GPS
-#' @param bin_seq Sequence of w (treatment) to generate pseudo population. If
-#' NULL is passed the default value will be used, which is
-#' `seq(min(w)+delta_n/2,max(w), by=delta_n)`.
 #' @param nthread An integer value that represents the number of threads to be
 #' used by internal packages.
 #' @param ...  Additional arguments passed to different models.
@@ -19,6 +16,9 @@
 #' ## Additional parameters
 #' ### Causal Inference Approach (ci_appr)
 #' - if ci_appr = 'matching':
+#'   - *bin_seq*: A sequence of w (treatment) to generate pseudo population.
+#'   If `NULL` is passed the default value will be used, which is
+#'   `seq(min(w)+delta_n/2,max(w), by=delta_n)`.
 #'   - *dist_measure*: Matching function. Available options:
 #'     - l1: Manhattan distance matching
 #'   - *delta_n*: caliper parameter.
@@ -39,12 +39,12 @@
 #' @examples
 #' \donttest{
 #' m_d <- generate_syn_data(sample_size = 100)
-#' gps_obj <- estimate_gps(data= m_d,
-#'                         formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
+#' gps_obj <- estimate_gps(.data = m_d,
+#'                         .formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
 #'                         gps_density = "normal",
 #'                         sl_lib = c("SL.xgboost"))
 #'
-#' cw_object <- compute_counter_weight(gps_obj = data_with_gps_1,
+#' cw_object <- compute_counter_weight(gps_obj = gps_obj,
 #'                                     ci_appr = "matching",
 #'                                     bin_seq = NULL,
 #'                                     nthread = 1,
@@ -98,7 +98,7 @@ compute_counter_weight <- function(gps_obj,
       stop("delta_n input param is not provided for matching approach.")
     }
     if (is.null(scale)){
-      stope("scale input param is not provided for matching approach.")
+      stop("scale input param is not provided for matching approach.")
     }
     if (is.null(dist_measure)){
       stop("dist_measure input param is not provided for matching approach.")

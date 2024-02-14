@@ -10,13 +10,10 @@
 #'
 #' @param .data A data.frame of observation data with `id` column.
 #' @param cw_obj An S3 object of counter_weight.
-#' @param ci_appr The causal inference approach. Possible values are:
-#'   - "matching": Matching by GPS
-#'   - "weighting": Weighting by GPS
-#' @param covariate_column_names A list of covariate columns.
+#' @param covariate_col_names A list of covariate columns.
+#' @param covar_bl_trs Covariate balance threshold
+#' @param covar_bl_trs_type Type of the covariance balance threshold.
 #' @param covar_bl_method Covariate balance method.
-#' @param covar_bl_trs: Covariate balance threshold
-#' @param covar_bl_trs_type: Type of the covariance balance threshold.
 #'
 #' @return
 #' Returns a pseudo population (gpsm_pspop) object that is generated
@@ -52,7 +49,7 @@
 #'                         ...)}
 #'
 #' data_with_gps_1 <- estimate_gps(
-#'   .data = trimmed_data,
+#'   .data = m_d,
 #'   .formula = w ~ I(cf1^2) + cf2 + I(cf3^2) + cf4 + cf5 + cf6,
 #'   sl_lib = c("m_xgboost"),
 #'   gps_density = "normal")
@@ -66,7 +63,7 @@
 #'                                              scale = 0.5)
 #'
 #' pseudo_pop <- generate_pseudo_pop(.data = m_d,
-#'                                   cw_obj = cw_object_weighting,
+#'                                   cw_obj = cw_object_matching,
 #'                                   covariate_col_names = c("cf1", "cf2",
 #'                                                           "cf3", "cf4",
 #'                                                           "cf5", "cf6"),
@@ -138,8 +135,7 @@ generate_pseudo_pop <- function(.data,
                                        c = merged_data[, covariate_cols],
                                        counter_weight = merged_data[,
                                                           c("counter_weight")],
-                                       ci_appr = cw_obj$params$ci_appr,
-                                       nthread = nthread)
+                                       ci_appr = cw_obj$params$ci_appr)
 
 
   # compute effective sample size

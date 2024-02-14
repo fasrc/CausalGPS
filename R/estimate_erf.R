@@ -154,7 +154,7 @@ estimate_erf <- function(.data,
 
     w_pred <- data.frame(w = w_vals)
     names(w_pred) <- predictor
-    y_pred <- predict(gam_model, w_pred)
+    y_pred <- stats::predict(gam_model, w_pred)
     names(y_pred) <- NULL
 
     result_data_original <- data.frame(x = x,
@@ -192,7 +192,7 @@ estimate_erf <- function(.data,
                                     nthread = nthread,
                                     kernel_appr = kernel_appr)
 
-    formula_string <- deparse(as.formula(.formula))
+    formula_string <- deparse(stats::as.formula(.formula))
     parts <- strsplit(formula_string, "~")[[1]]
     predictor <- trimws(parts[2])
 

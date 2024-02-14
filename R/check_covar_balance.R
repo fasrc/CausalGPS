@@ -10,14 +10,11 @@
 #' @param counter_weight A weight vector in different situations. If the
 #' matching approach is selected, it is an integer data.table of counters.
 #' In the case of the weighting approach, it is weight data.table.
-#' @param nthread The number of available threads.
-#' @param ... Additional arguments passed to different models.
+#' @param covar_bl_method Covariate balance method. Available options:
+#'      - 'absolute'
+#' @param covar_bl_trs Covariate balance threshold.
+#' @param covar_bl_trs_type Covariate balance type (mean, median, maximal).
 #'
-#' @details
-#' ## Additional parameters
-#'   - For ci_appr == matching:
-#'     - covar_bl_method
-#'     - covar_bl_trs
 #'
 #' @return
 #' output object:

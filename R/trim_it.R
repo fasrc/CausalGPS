@@ -34,7 +34,7 @@
 trim_it <- function(data_obj, trim_quantiles, variable){
 
   type_flag <- NULL
-  if (class(data_obj) == "data.frame"){
+  if (is.data.frame(data_obj)){
     data <- data_obj
     type_flag <- "data.frame"
   } else if (is.object(data_obj) && !isS4(data_obj)){

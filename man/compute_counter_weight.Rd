@@ -20,10 +20,6 @@ If it is provided, the number of iteration will forced to 1 (Default: NULL).}
 used by internal packages.}
 
 \item{...}{Additional arguments passed to different models.}
-
-\item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
 }
 \value{
 Returns a counter_weight (cgps_cw) object that includes \code{.data} and \code{params}
@@ -45,6 +41,9 @@ Computes counter (for matching approach) or weight (for weighting) approach.
 \itemize{
 \item if ci_appr = 'matching':
 \itemize{
+\item \emph{bin_seq}: A sequence of w (treatment) to generate pseudo population.
+If \code{NULL} is passed the default value will be used, which is
+\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.
 \item \emph{dist_measure}: Matching function. Available options:
 \itemize{
 \item l1: Manhattan distance matching
@@ -61,12 +60,12 @@ is attributed to the distance measures of the exposure versus the GPS.
 \examples{
 \donttest{
 m_d <- generate_syn_data(sample_size = 100)
-gps_obj <- estimate_gps(data= m_d,
-                        formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
+gps_obj <- estimate_gps(.data = m_d,
+                        .formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 + cf6,
                         gps_density = "normal",
                         sl_lib = c("SL.xgboost"))
 
-cw_object <- compute_counter_weight(gps_obj = data_with_gps_1,
+cw_object <- compute_counter_weight(gps_obj = gps_obj,
                                     ci_appr = "matching",
                                     bin_seq = NULL,
                                     nthread = 1,

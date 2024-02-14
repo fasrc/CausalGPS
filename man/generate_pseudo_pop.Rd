@@ -18,19 +18,13 @@ generate_pseudo_pop(
 
 \item{cw_obj}{An S3 object of counter_weight.}
 
+\item{covariate_col_names}{A list of covariate columns.}
+
+\item{covar_bl_trs}{Covariate balance threshold}
+
+\item{covar_bl_trs_type}{Type of the covariance balance threshold.}
+
 \item{covar_bl_method}{Covariate balance method.}
-
-\item{ci_appr}{The causal inference approach. Possible values are:
-\itemize{
-\item "matching": Matching by GPS
-\item "weighting": Weighting by GPS
-}}
-
-\item{covariate_column_names}{A list of covariate columns.}
-
-\item{covar_bl_trs:}{Covariate balance threshold}
-
-\item{covar_bl_trs_type:}{Type of the covariance balance threshold.}
 }
 \value{
 Returns a pseudo population (gpsm_pspop) object that is generated
@@ -76,7 +70,7 @@ m_xgboost <- function(nthread = 4,
                         ...)}
 
 data_with_gps_1 <- estimate_gps(
-  .data = trimmed_data,
+  .data = m_d,
   .formula = w ~ I(cf1^2) + cf2 + I(cf3^2) + cf4 + cf5 + cf6,
   sl_lib = c("m_xgboost"),
   gps_density = "normal")
@@ -90,7 +84,7 @@ cw_object_matching <- compute_counter_weight(gps_obj = data_with_gps_1,
                                              scale = 0.5)
 
 pseudo_pop <- generate_pseudo_pop(.data = m_d,
-                                  cw_obj = cw_object_weighting,
+                                  cw_obj = cw_object_matching,
                                   covariate_col_names = c("cf1", "cf2",
                                                           "cf3", "cf4",
                                                           "cf5", "cf6"),

@@ -338,6 +338,8 @@ plot.cgps_gps <- function(x, ...) {
 #'
 autoplot.cgps_cw <- function(object, ...){
 
+  id <- counter_weight <- NULL
+
   dataset <- object$.data
 
   # Default values
@@ -485,11 +487,12 @@ plot.cgps_cw <- function(x, ...) {
 #'
 autoplot.cgps_erf <- function(object, ...){
 
+
+  x <- y_original <- normalized_weight <- w_vals <- y_pred <- NULL
+
+
   df1 <- object$.data_original
   df2 <- object$.data_prediction
-
-  # Default values
-
 
   ## collect additional arguments
   dot_args <- list(...)
@@ -499,16 +502,18 @@ autoplot.cgps_erf <- function(object, ...){
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
 
-  g <- ggplot() +
-    ggplot2::geom_point(data = df1, aes(x, y_original, size=normalized_weight),
-                        color="blue", alpha=0.1) +
-    ggplot2::geom_line(data = df2, aes(w_vals, y_pred), color = "orange") +
-    ggplot2::geom_point(data = df2, aes(w_vals, y_pred), color = "orange") +
-    ggplot2::labs(x = "Exposure",
-                  y = "Outcome") +
-    ggplot2::ggtitle(paste0("Exposure Response Curve for ",
-                            object$params$model_type, " model")) +
-    ggplot2::theme_bw()
+  g <- ggplot2::ggplot() +
+       ggplot2::geom_point(data = df1, ggplot2::aes(x,
+                                                    y_original,
+                                                    size=normalized_weight),
+                           color="blue", alpha=0.1) +
+       ggplot2::geom_line(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
+       ggplot2::geom_point(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
+       ggplot2::labs(x = "Exposure",
+                     y = "Outcome") +
+       ggplot2::ggtitle(paste0("Exposure Response Curve for ",
+                               object$params$model_type, " model")) +
+       ggplot2::theme_bw()
 
   return(g)
 }

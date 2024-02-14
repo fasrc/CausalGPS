@@ -35,10 +35,6 @@ including \code{normal} and \code{kernel}.}
 used by internal packages.}
 
 \item{...}{Additional parameters.}
-
-\item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
 }
 \value{
 \code{compile_pseudo_pop} returns the pseudo population data that is compiled based
@@ -47,6 +43,12 @@ on the selected causal inference approach.
 \description{
 Compiles pseudo population based on the original population and estimated GPS
 value.
+}
+\details{
+For matching approach, use an extra parameter, \code{bin_seq}, which is sequence
+of w (treatment) to generate pseudo population. If \code{NULL} is passed the
+default value will be used, which is
+\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.
 }
 \examples{
 \donttest{

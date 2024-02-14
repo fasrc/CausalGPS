@@ -15,13 +15,16 @@
 #' @param ci_appr Causal inference approach.
 #' @param gps_density Model type which is used for estimating GPS value,
 #' including `normal` and `kernel`.
-#' @param bin_seq Sequence of w (treatment) to generate pseudo population. If
-#' NULL is passed the default value will be used, which is
-#' `seq(min(w)+delta_n/2,max(w), by=delta_n)`.
 #' @param exposure_col_name Exposure data column name.
 #' @param nthread An integer value that represents the number of threads to be
 #' used by internal packages.
 #' @param ... Additional parameters.
+#'
+#' @details
+#' For matching approach, use an extra parameter, `bin_seq`, which is sequence
+#' of w (treatment) to generate pseudo population. If `NULL` is passed the
+#' default value will be used, which is
+#' `seq(min(w)+delta_n/2,max(w), by=delta_n)`.
 #'
 #'
 #' @export
@@ -73,6 +76,8 @@ compile_pseudo_pop <- function(data_obj,
                                exposure_col_name,
                                nthread,
                                ...) {
+
+  dist_measure <- delta_n <- bin_seq <- NULL
 
   # Checking arguments
   # check_args_compile_pseudo_pop(ci_appr = ci_appr, ...)

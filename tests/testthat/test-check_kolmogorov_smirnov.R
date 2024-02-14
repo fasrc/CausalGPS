@@ -48,8 +48,7 @@ test_that("check_kolmogorov_smirnov works as expected.", {
   output <- CausalGPS:::check_kolmogorov_smirnov(w = ps_pop1$.data[, c("w")],
                                                  c = ps_pop1$.data[, ps_pop1$params$covariate_col_names],
                                                  counter = ps_pop1$.data[, c("counter_weight")],
-                                                 ci_appr="matching",
-                                                 nthread=1)
+                                                 ci_appr="matching")
 
   expect_equal(length(output), 2L)
   expect_equal(length(output$ks_stat), 7L)
