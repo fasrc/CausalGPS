@@ -37,7 +37,7 @@ Developing Docker image can be downloaded from Docker Hub. See more details in d
 The CausalGPS package encompasses two primary stages: Design and Analysis. The Design stage comprises estimating GPS values, generating weights or counts of matched data, and evaluating the generated population. The Analysis stage is focused on estimating the exposure-response function. The following figure represents the process workflow
 
 <p align="center">
-  <img src="man/figures/png/process_flow_with_plots.png.png" alt="Processing flow"/>
+  <img src="man/figures/png/process_flow_with_plots.png" alt="Processing flow"/>
 </p>
 
 
