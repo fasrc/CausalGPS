@@ -84,105 +84,39 @@ first.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_pseudo_pop</span><span class="op">(</span></span>
-<span>  <span class="va">w</span>,</span>
-<span>  <span class="va">c</span>,</span>
-<span>  <span class="va">ci_appr</span>,</span>
-<span>  gps_density <span class="op">=</span> <span class="st">"normal"</span>,</span>
-<span>  use_cov_transform <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  transformers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"pow2"</span>, <span class="st">"pow3"</span><span class="op">)</span>,</span>
-<span>  bin_seq <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  exposure_trim_qtls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,</span>
-<span>  gps_trim_qtls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span>,</span>
-<span>  nthread <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  include_original_data <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  gps_obj <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">cw_obj</span>,</span>
+<span>  <span class="va">covariate_col_names</span>,</span>
+<span>  covar_bl_trs <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  covar_bl_trs_type <span class="op">=</span> <span class="st">"maximal"</span>,</span>
+<span>  covar_bl_method <span class="op">=</span> <span class="st">"absolute"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>w</dt>
-<dd><p>A data.frame comprised of two columns: one contains the observed
-exposure variable, and the other is labeled as 'id'. The column for the
-outcome variable can be assigned any name as per your requirements.</p></dd>
+    <dl><dt>.data</dt>
+<dd><p>A data.frame of observation data with <code>id</code> column.</p></dd>
 
 
-<dt>c</dt>
-<dd><p>A data.frame of includes observed covariate variables. It should
-also consist of a column named 'id'.</p></dd>
+<dt>cw_obj</dt>
+<dd><p>An S3 object of counter_weight.</p></dd>
 
 
-<dt>ci_appr</dt>
-<dd><p>The causal inference approach. Possible values are:</p><ul><li><p>"matching": Matching by GPS</p></li>
-<li><p>"weighting": Weighting by GPS</p></li>
-</ul></dd>
+<dt>covariate_col_names</dt>
+<dd><p>A list of covariate columns.</p></dd>
 
 
-<dt>gps_density</dt>
-<dd><p>Model type which is used for estimating GPS value,
-including <code>normal</code> (default) and <code>kernel</code>.</p></dd>
+<dt>covar_bl_trs</dt>
+<dd><p>Covariate balance threshold</p></dd>
 
 
-<dt>use_cov_transform</dt>
-<dd><p>If TRUE, the function uses transformer to meet the
-covariate balance.</p></dd>
+<dt>covar_bl_trs_type</dt>
+<dd><p>Type of the covariance balance threshold.</p></dd>
 
 
-<dt>transformers</dt>
-<dd><p>A list of transformers. Each transformer should be a
-unary function. You can pass name of customized function in the quotes.
-Available transformers:</p><ul><li><p>pow2: to the power of 2</p></li>
-<li><p>pow3: to the power of 3</p></li>
-</ul></dd>
-
-
-<dt>bin_seq</dt>
-<dd><p>Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-<code>seq(min(w)+delta_n/2,max(w), by=delta_n)</code>.</p></dd>
-
-
-<dt>exposure_trim_qtls</dt>
-<dd><p>A numerical vector of two. Represents the trim quantile
-level for exposure values. Both numbers should be in the range of [0,1] and
-in increasing order (default: c(0.01, 0.99)).</p></dd>
-
-
-<dt>gps_trim_qtls</dt>
-<dd><p>A numerical vector of two. Represents the trim quantile
-level for the gps values. Both numbers should be in the range of [0,1] and
-in increasing order (default: c(0.0, 1.0)).</p></dd>
-
-
-<dt>params</dt>
-<dd><p>Includes list of params that is used internally. Unrelated
-parameters will be ignored.</p></dd>
-
-
-<dt>sl_lib</dt>
-<dd><p>A vector of prediction algorithms.</p></dd>
-
-
-<dt>nthread</dt>
-<dd><p>An integer value that represents the number of threads to be
-used by internal packages.</p></dd>
-
-
-<dt>include_original_data</dt>
-<dd><p>If TRUE, includes the original data in the
-outcome.</p></dd>
-
-
-<dt>gps_obj</dt>
-<dd><p>A gps object that is generated with <code>estimate_gps</code> function.
-If it is provided, the number of iteration will forced to 1 (Default: NULL).</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Additional arguments passed to different models.</p></dd>
+<dt>covar_bl_method</dt>
+<dd><p>Covariate balance method.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -200,67 +134,53 @@ object includes the following objects:</p><ul><li><p>params</p><ul><li><p>ci_app
 <li><p>best_gps_used_params</p></li>
 <li><p>effect size of generated pseudo population</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    
-<div class="section">
-<h3 id="additional-parameters">Additional parameters<a class="anchor" aria-label="anchor" href="#additional-parameters"></a></h3>
-
-<div class="section">
-<h4 id="causal-inference-approach-ci-appr-">Causal Inference Approach (ci_appr)<a class="anchor" aria-label="anchor" href="#causal-inference-approach-ci-appr-"></a></h4>
-
-<ul><li><p>if ci_appr = 'matching':</p><ul><li><p><em>dist_measure</em>: Matching function. Available options:</p><ul><li><p>l1: Manhattan distance matching</p></li>
-</ul></li>
-<li><p><em>delta_n</em>: caliper parameter.</p></li>
-<li><p><em>scale</em>: a specified scale parameter to control the relative weight that
-is attributed to the distance measures of the exposure versus the GPS.</p></li>
-<li><p><em>covar_bl_method</em>: covariate balance method. Available options:</p><ul><li><p>'absolute'</p></li>
-</ul></li>
-<li><p><em>covar_bl_trs</em>: covariate balance threshold</p></li>
-<li><p><em>covar_bl_trs_type</em>: covariate balance type (mean, median, maximal)</p></li>
-<li><p><em>max_attempt</em>: maximum number of attempt to satisfy covariate balance.</p></li>
-<li><p>See <code><a href="create_matching.html">create_matching()</a></code> for more details about the parameters and default
-values.</p></li>
-</ul></li>
-<li><p>if ci_appr = 'weighting':</p><ul><li><p><em>covar_bl_method</em>: Covariate balance method.</p></li>
-<li><p><em>covar_bl_trs</em>: Covariate balance threshold</p></li>
-<li><p><em>max_attempt</em>: Maximum number of attempt to satisfy covariate balance.</p></li>
-</ul></li>
-</ul></div>
-
-
-</div>
-
-    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="va">m_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_syn_data.html">generate_syn_data</a></span><span class="op">(</span>sample_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">pseuoo_pop</span> <span class="op">&lt;-</span> <span class="fu">generate_pseudo_pop</span><span class="op">(</span><span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"w"</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                                  <span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"cf1"</span>,<span class="st">"cf2"</span>,<span class="st">"cf3"</span>,<span class="st">"cf4"</span>,<span class="st">"cf5"</span>,<span class="st">"cf6"</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                                  ci_appr <span class="op">=</span> <span class="st">"matching"</span>,</span></span>
-<span class="r-in"><span>                                  gps_density <span class="op">=</span> <span class="st">"normal"</span>,</span></span>
-<span class="r-in"><span>                                  bin_seq <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
-<span class="r-in"><span>                                  expos_trim_qlts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.99</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  gps_trim_qlts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.99</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  use_cov_transform <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>                                  transformers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xgb_nrounds<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">20</span>,<span class="fl">30</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                                xgb_eta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                  nthread <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                  covar_bl_method <span class="op">=</span> <span class="st">"absolute"</span>,</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">967</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_syn_data.html">generate_syn_data</a></span><span class="op">(</span>sample_size <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m_d</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">m_d</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m_xgboost</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nthread</span> <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">ntrees</span> <span class="op">=</span> <span class="fl">35</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">shrinkage</span> <span class="op">=</span> <span class="fl">0.3</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">max_depth</span> <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">...</span><span class="op">)</span> <span class="op">{</span><span class="fu">SuperLearner</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SuperLearner/man/SL.xgboost.html" class="external-link">SL.xgboost</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>                        nthread <span class="op">=</span> <span class="va">nthread</span>,</span></span>
+<span class="r-in"><span>                        ntrees <span class="op">=</span> <span class="va">ntrees</span>,</span></span>
+<span class="r-in"><span>                        shrinkage<span class="op">=</span><span class="va">shrinkage</span>,</span></span>
+<span class="r-in"><span>                        max_depth<span class="op">=</span><span class="va">max_depth</span>,</span></span>
+<span class="r-in"><span>                        <span class="va">...</span><span class="op">)</span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data_with_gps_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="estimate_gps.html">estimate_gps</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  .data <span class="op">=</span> <span class="va">m_d</span>,</span></span>
+<span class="r-in"><span>  .formula <span class="op">=</span> <span class="va">w</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">cf1</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">cf2</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">cf3</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">cf4</span> <span class="op">+</span> <span class="va">cf5</span> <span class="op">+</span> <span class="va">cf6</span>,</span></span>
+<span class="r-in"><span>  sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  gps_density <span class="op">=</span> <span class="st">"normal"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get(library$library$predAlgorithm[s], envir = env):</span> object 'm_xgboost' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cw_object_matching</span> <span class="op">&lt;-</span> <span class="fu"><a href="compute_counter_weight.html">compute_counter_weight</a></span><span class="op">(</span>gps_obj <span class="op">=</span> <span class="va">data_with_gps_1</span>,</span></span>
+<span class="r-in"><span>                                             ci_appr <span class="op">=</span> <span class="st">"matching"</span>,</span></span>
+<span class="r-in"><span>                                             bin_seq <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>                                             nthread <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                                             delta_n <span class="op">=</span> <span class="fl">0.1</span>,</span></span>
+<span class="r-in"><span>                                             dist_measure <span class="op">=</span> <span class="st">"l1"</span>,</span></span>
+<span class="r-in"><span>                                             scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in compute_counter_weight(gps_obj = data_with_gps_1, ci_appr = "matching",     bin_seq = NULL, nthread = 1, delta_n = 0.1, dist_measure = "l1",     scale = 0.5):</span> object 'data_with_gps_1' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pseudo_pop</span> <span class="op">&lt;-</span> <span class="fu">generate_pseudo_pop</span><span class="op">(</span>.data <span class="op">=</span> <span class="va">m_d</span>,</span></span>
+<span class="r-in"><span>                                  cw_obj <span class="op">=</span> <span class="va">cw_object_matching</span>,</span></span>
+<span class="r-in"><span>                                  covariate_col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cf1"</span>, <span class="st">"cf2"</span>,</span></span>
+<span class="r-in"><span>                                                          <span class="st">"cf3"</span>, <span class="st">"cf4"</span>,</span></span>
+<span class="r-in"><span>                                                          <span class="st">"cf5"</span>, <span class="st">"cf6"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                                  covar_bl_trs <span class="op">=</span> <span class="fl">0.1</span>,</span></span>
-<span class="r-in"><span>                                  covar_bl_trs_type<span class="op">=</span> <span class="st">"mean"</span>,</span></span>
-<span class="r-in"><span>                                  max_attempt <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                  dist_measure <span class="op">=</span> <span class="st">"l1"</span>,</span></span>
-<span class="r-in"><span>                                  delta_n <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                                  scale <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> mean absolute correlation: 0.187874919634512| Covariate balance threshold: 0.1</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> mean absolute correlation: 0.259346434375271| Covariate balance threshold: 0.1</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Covariate balance condition has not been met.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Best mean absolute correlation: 0.259346434375271| Covariate balance threshold: 0.1</span>
+<span class="r-in"><span>                                  covar_bl_trs_type <span class="op">=</span> <span class="st">"maximal"</span>,</span></span>
+<span class="r-in"><span>                                  covar_bl_method <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in generate_pseudo_pop(.data = m_d, cw_obj = cw_object_matching,     covariate_col_names = c("cf1", "cf2", "cf3", "cf4", "cf5",         "cf6"), covar_bl_trs = 0.1, covar_bl_trs_type = "maximal",     covar_bl_method = "absolute"):</span> object 'cw_object_matching' not found</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

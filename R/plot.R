@@ -1,80 +1,4 @@
 #' @title
-#' A helper function for gpsm_erf object
-#'
-#' @description
-#' A helper function to plot gpsm_erf object using ggplot2 package.
-#'
-#' @param object A gpsm_erf object.
-#' @param ... Additional arguments passed to customize the plot.
-#'
-#' @return
-#' Returns a ggplot object.
-#'
-#' @export
-#'
-#' @keywords internal
-#' @importFrom ggplot2 autoplot
-#' @importFrom rlang .data
-#'
-autoplot.gpsm_erf <- function(object, ...) {
-
-  gg_labs <- gg_title <- NULL
-
-  ## collect additional arguments
-  dot_args <- list(...)
-  arg_names <- names(dot_args)
-
-  for (i in arg_names) {
-    assign(i, unlist(dot_args[i], use.names = FALSE))
-  }
-
-  if (is.null(gg_labs)) {
-    gg_labs <- c("Exposure Level", "Outcome Rate")
-  }
-
-  if (is.null(gg_title)) {
-    gg_title <- "Exposure Response Curve"
-  }
-
-  # extract data
-  tmp_data <- data.frame(w.vals = object$params$w_vals,
-                         erf = object$erf)
-
-  g <- ggplot2::ggplot(tmp_data) +
-       ggplot2::theme_bw() +
-       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-       ggplot2::geom_line(ggplot2::aes(.data$w.vals, .data$erf),
-                          color = "red", size = 1)
-
-
-  g <- g + ggplot2::labs(x = gg_labs[1], y = gg_labs[2])
-  g <- g + ggplot2::ggtitle(gg_title)
-
-  return(g)
-}
-
-#' @title
-#' Extend generic plot functions for gpsm_erf class
-#'
-#' @description
-#' A wrapper function to extend generic plot functions for gpsm_erf class.
-#'
-#' @param x  A gpsm_erf object.
-#' @param ... Additional arguments passed to customize the plot.
-#'
-#' @return
-#' Returns a ggplot2 object, invisibly. This function is called for side effects.
-#'
-#' @export
-#'
-plot.gpsm_erf <- function(x, ...) {
-  g <- ggplot2::autoplot(x, ...)
-  print(g)
-  invisible(g)
-}
-
-
-#' @title
 #' A helper function for cgps_pspop object
 #'
 #' @description
@@ -86,7 +10,6 @@ plot.gpsm_erf <- function(x, ...) {
 #' @return
 #' Returns a ggplot object.
 #'
-#' @export
 #'
 #' @keywords internal
 #' @importFrom ggplot2 autoplot
@@ -226,6 +149,7 @@ autoplot.cgps_pspop <- function(object, ...){
   return(g)
 }
 
+
 #' @title
 #' Extend generic plot functions for cgps_pspop class
 #'
@@ -250,7 +174,6 @@ plot.cgps_pspop <- function(x, ...) {
 }
 
 
-
 #' @title
 #' A helper function for cgps_gps object
 #'
@@ -263,7 +186,6 @@ plot.cgps_pspop <- function(x, ...) {
 #' @return
 #' Returns a ggplot object.
 #'
-#' @export
 #'
 #' @keywords internal
 #' @importFrom ggplot2 autoplot
@@ -287,8 +209,8 @@ autoplot.cgps_gps <- function(object, ...){
                        ggplot2::aes(x = .data$gps)) +
     ggplot2::theme_bw() +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5)) +
-                       ggplot2::geom_density(fill = "blue", alpha = 0.5) +
-                       ggplot2::ggtitle("Density Plot of GPS Values")
+    ggplot2::geom_density(fill = "blue", alpha = 0.5) +
+    ggplot2::ggtitle("Density Plot of GPS Values")
   g <- g + ggplot2::labs(x = "GPS value", y = "Density")
 
   return(g)
@@ -317,7 +239,6 @@ plot.cgps_gps <- function(x, ...) {
 }
 
 
-
 #' @title
 #' A helper function for cgps_cw object
 #'
@@ -330,7 +251,6 @@ plot.cgps_gps <- function(x, ...) {
 #' @return
 #' Returns a ggplot object.
 #'
-#' @export
 #'
 #' @keywords internal
 #' @importFrom ggplot2 autoplot
@@ -394,19 +314,19 @@ autoplot.cgps_cw <- function(object, ...){
   if (object$params$ci_appr == "matching") {
     hist_density_plot <- ggplot2::ggplot(subset_data,
                                          ggplot2::aes(x = counter_weight)) +
-                         ggplot2::geom_histogram(bandwidth = 1,
-                                                 fill = "blue",
-                                                 color = "black") +
-                         ggplot2::labs(x = "Count", y = "Frequency") +
-                         ggplot2::theme_minimal()
+      ggplot2::geom_histogram(bandwidth = 1,
+                              fill = "blue",
+                              color = "black") +
+      ggplot2::labs(x = "Count", y = "Frequency") +
+      ggplot2::theme_minimal()
     y_label <- "Count"
   } else if (object$params$ci_appr == "weighting") {
     hist_density_plot <- ggplot2::ggplot(subset_data,
-                                        ggplot2::aes(x = counter_weight)) +
-                         ggplot2::geom_density(fill = "blue", color = "black") +
-                         ggplot2::labs(x = "Weight  (displayed in log10 scale)",
-                                       y = "Density") +
-                         ggplot2::theme_minimal() + ggplot2::scale_x_log10()
+                                         ggplot2::aes(x = counter_weight)) +
+      ggplot2::geom_density(fill = "blue", color = "black") +
+      ggplot2::labs(x = "Weight  (displayed in log10 scale)",
+                    y = "Density") +
+      ggplot2::theme_minimal() + ggplot2::scale_x_log10()
     y_label <- "Weight"
   } else {
     stop("The cgsp_cw object is not generated properly.")
@@ -415,13 +335,13 @@ autoplot.cgps_cw <- function(object, ...){
   plot_title <- paste0("Displaying the ", y_label)
 
   g <- ggplot2::ggplot(data = subset_data, ggplot2::aes(x = as.factor(id),
-                                               y = counter_weight)) +
-       ggplot2::geom_point(shape = "|", color = "blue", size = 2) +
-       ggplot2::geom_segment(ggplot2::aes(xend = as.factor(id), yend = 0),
-                             color = "red", linewidth = 0.2) +
-       ggplot2::labs(x = "ID", y = y_label, title = plot_title) +
-       ggplot2::theme_minimal() +
-       ggplot2::coord_flip()
+                                                        y = counter_weight)) +
+    ggplot2::geom_point(shape = "|", color = "blue", size = 2) +
+    ggplot2::geom_segment(ggplot2::aes(xend = as.factor(id), yend = 0),
+                          color = "red", linewidth = 0.2) +
+    ggplot2::labs(x = "ID", y = y_label, title = plot_title) +
+    ggplot2::theme_minimal() +
+    ggplot2::coord_flip()
 
   if (every_n > 1){
     g <- g + ggplot2::scale_x_discrete(breaks = unique(as.factor(subset_data$id))[c(rep(FALSE, every_n-1), TRUE)])  # Show ID labels every 20 data points
@@ -479,7 +399,6 @@ plot.cgps_cw <- function(x, ...) {
 #' @return
 #' Returns a ggplot object.
 #'
-#' @export
 #'
 #' @keywords internal
 #' @importFrom ggplot2 autoplot
@@ -503,17 +422,17 @@ autoplot.cgps_erf <- function(object, ...){
   }
 
   g <- ggplot2::ggplot() +
-       ggplot2::geom_point(data = df1, ggplot2::aes(x,
-                                                    y_original,
-                                                    size=normalized_weight),
-                           color="blue", alpha=0.1) +
-       ggplot2::geom_line(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
-       ggplot2::geom_point(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
-       ggplot2::labs(x = "Exposure",
-                     y = "Outcome") +
-       ggplot2::ggtitle(paste0("Exposure Response Curve for ",
-                               object$params$model_type, " model")) +
-       ggplot2::theme_bw()
+    ggplot2::geom_point(data = df1, ggplot2::aes(x,
+                                                 y_original,
+                                                 size=normalized_weight),
+                        color="blue", alpha=0.1) +
+    ggplot2::geom_line(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
+    ggplot2::geom_point(data = df2, ggplot2::aes(w_vals, y_pred), color = "orange") +
+    ggplot2::labs(x = "Exposure",
+                  y = "Outcome") +
+    ggplot2::ggtitle(paste0("Exposure Response Curve for ",
+                            object$params$model_type, " model")) +
+    ggplot2::theme_bw()
 
   return(g)
 }
@@ -541,3 +460,4 @@ plot.cgps_erf <- function(x, ...) {
   print(g)
   invisible(g)
 }
+

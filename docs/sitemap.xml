@@ -67,6 +67,18 @@
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/absolute_weighted_corr_fun.html</loc>
   </url>
   <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_cw.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_erf.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_gps.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_pspop.html</loc>
+  </url>
+  <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.gpsm_erf.html</loc>
   </url>
   <url>
@@ -97,6 +109,9 @@
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_closest_wgps.html</loc>
   </url>
   <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_counter_weight.html</loc>
+  </url>
+  <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_density.html</loc>
   </url>
   <url>
@@ -119,6 +134,9 @@
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/create_weighting.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_erf.html</loc>
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_gps.html</loc>
@@ -163,6 +181,18 @@
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/matching_l1.html</loc>
   </url>
   <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_cw.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_erf.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_gps.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_pspop.html</loc>
+  </url>
+  <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.gpsm_erf.html</loc>
   </url>
   <url>
@@ -170,6 +200,18 @@
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/preprocess_data.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_cw.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_erf.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_gps.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_pspop.html</loc>
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.gpsm_erf.html</loc>
@@ -190,6 +232,18 @@
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf_locpol.html</loc>
   </url>
   <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_cw.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_erf.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_gps.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_pspop.html</loc>
+  </url>
+  <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.gpsm_erf.html</loc>
   </url>
   <url>
@@ -206,6 +260,9 @@
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_gps.html</loc>
+  </url>
+  <url>
+    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_it.html</loc>
   </url>
   <url>
     <loc>https://NSAPH-Software.github.io/CausalGPS/reference/w_fun.html</loc>

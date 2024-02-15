@@ -78,7 +78,6 @@ value.</p>
 <span>  <span class="va">data_obj</span>,</span>
 <span>  <span class="va">ci_appr</span>,</span>
 <span>  <span class="va">gps_density</span>,</span>
-<span>  <span class="va">bin_seq</span>,</span>
 <span>  <span class="va">exposure_col_name</span>,</span>
 <span>  <span class="va">nthread</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -106,12 +105,6 @@ value.</p>
 including <code>normal</code> and <code>kernel</code>.</p></dd>
 
 
-<dt>bin_seq</dt>
-<dd><p>Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-<code>seq(min(w)+delta_n/2,max(w), by=delta_n)</code>.</p></dd>
-
-
 <dt>exposure_col_name</dt>
 <dd><p>Exposure data column name.</p></dd>
 
@@ -132,20 +125,38 @@ used by internal packages.</p></dd>
 <p><code>compile_pseudo_pop</code> returns the pseudo population data that is compiled based
 on the selected causal inference approach.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>For matching approach, use an extra parameter, <code>bin_seq</code>, which is sequence
+of w (treatment) to generate pseudo population. If <code>NULL</code> is passed the
+default value will be used, which is
+<code>seq(min(w)+delta_n/2,max(w), by=delta_n)</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">112</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">m_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_syn_data.html">generate_syn_data</a></span><span class="op">(</span>sample_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">data_with_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="estimate_gps.html">estimate_gps</a></span><span class="op">(</span><span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"w"</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                              <span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"cf1"</span>,<span class="st">"cf2"</span>,<span class="st">"cf3"</span>,<span class="st">"cf4"</span>,<span class="st">"cf5"</span>,<span class="st">"cf6"</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m_xgboost</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">nthread</span> <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">ntrees</span> <span class="op">=</span> <span class="fl">35</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">shrinkage</span> <span class="op">=</span> <span class="fl">0.3</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">max_depth</span> <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>                      <span class="va">...</span><span class="op">)</span> <span class="op">{</span><span class="fu">SuperLearner</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SuperLearner/man/SL.xgboost.html" class="external-link">SL.xgboost</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>                        nthread <span class="op">=</span> <span class="va">nthread</span>,</span></span>
+<span class="r-in"><span>                        ntrees <span class="op">=</span> <span class="va">ntrees</span>,</span></span>
+<span class="r-in"><span>                        shrinkage<span class="op">=</span><span class="va">shrinkage</span>,</span></span>
+<span class="r-in"><span>                        max_depth<span class="op">=</span><span class="va">max_depth</span>,</span></span>
+<span class="r-in"><span>                        <span class="va">...</span><span class="op">)</span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data_with_gps</span> <span class="op">&lt;-</span> <span class="fu"><a href="estimate_gps.html">estimate_gps</a></span><span class="op">(</span>.data <span class="op">=</span> <span class="va">m_d</span>,</span></span>
+<span class="r-in"><span>                              .formula <span class="op">=</span> <span class="va">w</span> <span class="op">~</span> <span class="va">cf1</span> <span class="op">+</span> <span class="va">cf2</span> <span class="op">+</span> <span class="va">cf3</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>                                             <span class="va">cf4</span> <span class="op">+</span> <span class="va">cf5</span> <span class="op">+</span> <span class="va">cf6</span>,</span></span>
 <span class="r-in"><span>                              gps_density <span class="op">=</span> <span class="st">"normal"</span>,</span></span>
-<span class="r-in"><span>                              params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xgb_max_depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                       xgb_nrounds<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">20</span>,<span class="fl">30</span>,<span class="fl">40</span>,<span class="fl">50</span>,<span class="fl">60</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                              nthread <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                              sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>                             <span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get(library$library$predAlgorithm[s], envir = env):</span> object 'm_xgboost' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu">compile_pseudo_pop</span><span class="op">(</span>data_obj <span class="op">=</span> <span class="va">data_with_gps</span>,</span></span>
@@ -160,6 +171,7 @@ on the selected causal inference approach.</p>
 <span class="r-in"><span>                         covar_bl_trs_type<span class="op">=</span> <span class="st">"mean"</span>,</span></span>
 <span class="r-in"><span>                         delta_n <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
 <span class="r-in"><span>                         scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in compile_pseudo_pop(data_obj = data_with_gps, ci_appr = "matching",     gps_density = "normal", bin_seq = NULL, exposure_col_name = c("w"),     nthread = 1, dist_measure = "l1", covar_bl_method = "absolute",     covar_bl_trs = 0.1, covar_bl_trs_type = "mean", delta_n = 0.5,     scale = 1):</span> object 'data_with_gps' not found</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

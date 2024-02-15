@@ -74,7 +74,7 @@ the pseudo-population</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_kolmogorov_smirnov</span><span class="op">(</span><span class="va">w</span>, <span class="va">c</span>, <span class="va">ci_appr</span>, counter_weight <span class="op">=</span> <span class="cn">NULL</span>, nthread <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_kolmogorov_smirnov</span><span class="op">(</span><span class="va">w</span>, <span class="va">c</span>, <span class="va">ci_appr</span>, counter_weight <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -95,10 +95,6 @@ the pseudo-population</p>
 <dd><p>A weight vector in different situations. If the
 matching approach is selected, it is an integer data.table of counters.
 In the case of the weighting approach, it is weight data.table.</p></dd>
-
-
-<dt>nthread</dt>
-<dd><p>The number of available threads.</p></dd>
 
 </dl></div>
     <div class="section level2">
