@@ -71,11 +71,10 @@ gps_obj <- estimate_gps(.data = m_d,
 
 where
 
-**`.data`** A data.frame of input data including the `id` column.
-**`.formula`** The formula for modeling exposure based on provided confounders.
-**`sl_lib`**: A vector of prediction algorithms. 
-**`gps_density`** A model type which is used for estimating GPS value, including
- normal (default) and kernel.   
+- `.data` A data.frame of input data including the `id` column.  
+- `.formula` The formula for modeling exposure based on provided confounders.  
+- `sl_lib` A vector of prediction algorithms.   
+- `gps_density` A model type which is used for estimating GPS value, including `normal` (default) and `kernel`.   
 
 ### Computing weight or count of matched data
 
@@ -94,17 +93,17 @@ cw_object_matching <- compute_counter_weight(gps_obj = gps_obj,
 
 where 
 
-**`ci_appr`** The causal inference approach. Possible values are:   
+- `ci_appr` The causal inference approach. Possible values are:   
   - "matching": Matching by GPS   
   - "weighting": Weighting by GPS   
-**`bin_seq`** Sequence of w (treatment) to generate pseudo population. If NULL is passed the default value will be used, which is `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
-**`nthread`** An integer value that represents the number of threads to be used by internal packages in a shared memory system.  
+- `bin_seq` Sequence of w (treatment) to generate pseudo population. If NULL is passed the default value will be used, which is `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
+- `nthread` An integer value that represents the number of threads to be used by internal packages in a shared memory system.  
 
 If `ci.appr` = `matching`:   
-   - *dist_measure*: Distance measuring function. Available options:   
+   - `dist_measure`: Distance measuring function. Available options:   
      - l1: Manhattan distance matching   
-   - *delta_n*: caliper parameter.   
-   - *scale*: a specified scale parameter to control the relative weight that
+   - `delta_n`: caliper parameter.   
+   - `scale`: a specified scale parameter to control the relative weight that is attributed to the distance measures of the exposure versus the GPS.  
 
 ### Estimating psuedo population
 
@@ -122,10 +121,10 @@ pseudo_pop_matching <- generate_pseudo_pop(.data = m_d,
 
 where
 
-**covar_bl_method**: covariate balance method. Available options:   
+- `covar_bl_method`: covariate balance method. Available options:   
   - 'absolute'   
-**covar_bl_trs**: covariate balance threshold   
-**covar_bl_trs_type**: covariate balance type (mean, median, maximal)   
+- `covar_bl_trs`: covariate balance threshold   
+- `covar_bl_trs_type`: covariate balance type (mean, median, maximal)   
 
 
 ### Estimating exposure response function
@@ -145,9 +144,9 @@ erf_obj_nonparametric <- estimate_erf(.data = pseudo_pop_matching$.data,
 
 where
 
-**`w_vals`**:  A numeric vector of values at which you want to calculate the exposure response function. 
-**`bw_seq`**: A vector of bandwidth values.
-**`kernel_appr`**: Internal kernel approach. Available options are locpol and kernsmooth.
+- `w_vals`:  A numeric vector of values at which you want to calculate the exposure response function.  
+- `bw_seq`: A vector of bandwidth values.   
+- `kernel_appr`: Internal kernel approach. Available options are locpol and kernsmooth.   
 
 
 ## Notes
