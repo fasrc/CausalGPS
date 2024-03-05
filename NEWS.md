@@ -1,8 +1,15 @@
 ## CausalGPS (Developing)
 
 ### Added 
+* `estimate_gps` now accepts formula for generating GPS object.
+* `estimate_gps` now has functions for generic plot, print, and summary functions.
+* `trim_it` function.
 
 ### Changed 
+
+### Removed
+* `preprocess_data` function.
+* `trim_gps` function.
 
 ## CausalGPS 0.4.1 (2023-09-29)
 

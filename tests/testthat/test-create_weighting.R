@@ -3,63 +3,35 @@ test_that("create_weighting works as expected.", {
   skip_on_cran()
   set.seed(481)
   data.table::setDTthreads(1)
-  m_d <- generate_syn_data(sample_size = 100)
-  pseudo_pop <- generate_pseudo_pop(m_d[, c("id", "w")],
-                                    m_d[, c("id", "cf1", "cf2", "cf3", "cf4",
-                                            "cf5", "cf6")],
-                                    ci_appr = "weighting",
-                                    gps_density = "kernel",
-                                    exposure_trim_qtls = c(0.01,0.99),
-                                    sl_lib = c("SL.xgboost"),
-                                    covar_bl_method = "absolute",
-                                    covar_bl_trs = 0.1,
-                                    covar_bl_trs_type = "mean",
-                                    max_attempt = 1)
+  mydata <- generate_syn_data(sample_size = 100)
 
-  dataset <- pseudo_pop$pseudo_pop
-  dataset1 <- dataset
-  dataset1$w <- NULL
+  mydata$id <- seq_along(1:nrow(mydata))
+
+  m_xgboost <- function(nthread = 4,
+                        ntrees = 35,
+                        shrinkage = 0.3,
+                        max_depth = 5,
+                        ...) {SuperLearner::SL.xgboost(
+                          nthread = nthread,
+                          ntrees = ntrees,
+                          shrinkage=shrinkage,
+                          max_depth=max_depth,
+                          ...)}
+
+  assign("m_xgboost", m_xgboost, envir = .GlobalEnv)
+
+  data_with_gps_1 <- estimate_gps(
+    .data = mydata,
+    .formula = w ~ I(cf1^2) + cf2 + I(cf3^2) + cf4 + cf5 + cf6,
+    sl_lib = c("m_xgboost"),
+    gps_density = "normal")
 
 
-  # expect error if there is no column with "w"
-  expect_error(create_weighting(dataset = dataset1))
+
+  result <- create_weighting(dataset = data_with_gps_1$.data,
+                             exposure_col_name = "w")
 
 
-  expect_false(pseudo_pop$passed_covar_test)
-  expect_equal(length(pseudo_pop$pseudo_pop), 10)
-  expect_equal(nrow(pseudo_pop$pseudo_pop),98)
+  expect_equal(length(result), 7)
+  expect_equal(nrow(result), 100)
 })
-
-
-test_that("create_weighting works as expected.", {
-
-  skip_if_not_installed("earth")
-  skip_on_cran()
-
-  set.seed(481)
-  m_d <- generate_syn_data(sample_size = 100)
-  pseudo_pop <- generate_pseudo_pop(m_d[, c("id", "w")],
-                                    m_d[, c("id", "cf1", "cf2", "cf3",
-                                            "cf4", "cf5", "cf6")],
-                                    ci_appr = "weighting",
-                                    gps_density = "kernel",
-                                    exposure_trim_qtls = c(0.01,0.99),
-                                    sl_lib = c("SL.xgboost",
-                                               "SL.earth",
-                                               "SL.gam"),
-                                    covar_bl_method = "absolute",
-                                    covar_bl_trs = 0.1,
-                                    covar_bl_trs_type = "mean",
-                                    max_attempt = 1)
-
-  dataset <- pseudo_pop$pseudo_pop
-  dataset1 <- dataset
-  dataset1$w <- NULL
-
-  expect_error(create_weighting(dataset = dataset1))
-
-  expect_true(pseudo_pop$passed_covar_test)
-  expect_equal(length(pseudo_pop$pseudo_pop), 10)
-  expect_equal(nrow(pseudo_pop$pseudo_pop), 98)
-})
-

@@ -8,7 +8,6 @@ compile_pseudo_pop(
   data_obj,
   ci_appr,
   gps_density,
-  bin_seq,
   exposure_col_name,
   nthread,
   ...
@@ -30,10 +29,6 @@ compile_pseudo_pop(
 \item{gps_density}{Model type which is used for estimating GPS value,
 including \code{normal} and \code{kernel}.}
 
-\item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
-NULL is passed the default value will be used, which is
-\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
-
 \item{exposure_col_name}{Exposure data column name.}
 
 \item{nthread}{An integer value that represents the number of threads to be
@@ -49,16 +44,32 @@ on the selected causal inference approach.
 Compiles pseudo population based on the original population and estimated GPS
 value.
 }
+\details{
+For matching approach, use an extra parameter, \code{bin_seq}, which is sequence
+of w (treatment) to generate pseudo population. If \code{NULL} is passed the
+default value will be used, which is
+\code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.
+}
 \examples{
 \donttest{
 set.seed(112)
 m_d <- generate_syn_data(sample_size = 100)
-data_with_gps <- estimate_gps(m_d[, c("id", "w")],
-                              m_d[, c("id", "cf1","cf2","cf3","cf4","cf5","cf6")],
+
+m_xgboost <- function(nthread = 1,
+                      ntrees = 35,
+                      shrinkage = 0.3,
+                      max_depth = 5,
+                      ...) {SuperLearner::SL.xgboost(
+                        nthread = nthread,
+                        ntrees = ntrees,
+                        shrinkage=shrinkage,
+                        max_depth=max_depth,
+                        ...)}
+
+data_with_gps <- estimate_gps(.data = m_d,
+                              .formula = w ~ cf1 + cf2 + cf3 +
+                                             cf4 + cf5 + cf6,
                               gps_density = "normal",
-                              params = list(xgb_max_depth = c(3,4,5),
-                                       xgb_nrounds=c(10,20,30,40,50,60)),
-                              nthread = 1,
                               sl_lib = c("m_xgboost")
                              )
 

@@ -34,149 +34,147 @@ Developing Docker image can be downloaded from Docker Hub. See more details in d
 
 ## Usage
 
-Input parameters:
+The CausalGPS package encompasses two primary stages: Design and Analysis. The Design stage comprises estimating GPS values, generating weights or counts of matched data, and evaluating the generated population. The Analysis stage is focused on estimating the exposure-response function. The following figure represents the process workflow
 
- **`w`** A data.frame comprised of two columns: one contains the observed exposure variable, and the other is labeled as 'id'. The column for the outcome variable can be assigned any name as per your requirements.   
- **`c`**  A data.frame of includes observed covariate variables. It should also consist of a column named 'id'.
- **`ci_appr`** The causal inference approach. Possible values are:   
-   - "matching": Matching by GPS   
-   - "weighting": Weighting by GPS   
- **`gps_density`** Model type which is used for estimating GPS value, including
- normal (default) and kernel.   
- **`use_cov_transform`** If TRUE, the function uses transformer to meet the
-  covariate balance.   
- **`transformers`** A list of transformers. Each transformer should be a
- unary function. You can pass name of customized function in the quotes.   
- Available transformers:   
-   - pow2: to the power of 2   
-   - pow3: to the power of 3   
- **`bin_seq`** Sequence of w (treatment) to generate pseudo population. If
- NULL is passed the default value will be used, which is
- `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
- **`exposure_trim_qtls`** A numerical vector of two. Represents the trim quantile
- level. Both numbers should be in the range of [0,1] and in increasing order
- (default: c(0.01,0.99)).   
- **`gps_trim_qtls`** A numerical vector of two. Represents the trim quantile
- level. Both numbers should be in the range of [0,1] and in increasing order
- (default: c(0.01,0.99)). 
- **`params`** Includes list of params that is used internally. Unrelated
-  parameters will be ignored.   
- **`sl_lib`**: A vector of prediction algorithms. 
- **`nthread`** An integer value that represents the number of threads to be
- used by internal packages.   
- **`...`**  Additional arguments passed to different models.
+<p align="center">
+  <img src="man/figures/png/process_flow_with_plots.png" alt="Processing flow"/>
+</p>
 
-### Additional parameters   
-#### Causal Inference Approach (`ci.appr`)   
- 
- - if ci.appr = 'matching':   
-   - *dist_measure*: Distance measuring function. Available options:   
+
+
+
+### Estimating GPS values
+
+GPS values can be estimated using two distinct approaches: `kernel` and `normal`.
+
+```r
+set.seed(967)
+m_d <- generate_syn_data(sample_size = 500)
+
+m_xgboost <- function(nthread = 1,
+                      ntrees = 35,
+                      shrinkage = 0.3,
+                      max_depth = 5,
+                      ...) {SuperLearner::SL.xgboost(
+                        nthread = nthread,
+                        ntrees = ntrees,
+                        shrinkage=shrinkage,
+                        max_depth=max_depth,
+                        ...)}
+
+gps_obj <- estimate_gps(.data = m_d,
+                        .formula = w ~ I(cf1^2) + cf2 + I(cf3^2) + cf4 + cf5 + cf6,
+                        sl_lib = c("m_xgboost"),
+                        gps_density = "normal")
+
+```
+
+where
+
+- `.data` A data.frame of input data including the `id` column.  
+- `.formula` The formula for modeling exposure based on provided confounders.  
+- `sl_lib` A vector of prediction algorithms.   
+- `gps_density` A model type which is used for estimating GPS value, including `normal` (default) and `kernel`.   
+
+### Computing weight or count of matched data
+
+The second step in processing involves computing the weight or count of matched data. For the former, the weighting approach is used, and for the latter, the matching approach.
+
+```r
+cw_object_matching <- compute_counter_weight(gps_obj = gps_obj,
+                                             ci_appr = "matching",
+                                             bin_seq = NULL,
+                                             nthread = 1,
+                                             delta_n = 0.1,
+                                             dist_measure = "l1",
+                                             scale = 0.5)
+                                             
+```
+
+where 
+
+- `ci_appr` The causal inference approach. Possible values are:   
+  - "matching": Matching by GPS   
+  - "weighting": Weighting by GPS   
+- `bin_seq` Sequence of w (treatment) to generate pseudo population. If NULL is passed the default value will be used, which is `seq(min(w)+delta_n/2,max(w), by=delta_n)`.   
+- `nthread` An integer value that represents the number of threads to be used by internal packages in a shared memory system.  
+
+If `ci.appr` = `matching`:   
+   - `dist_measure`: Distance measuring function. Available options:   
      - l1: Manhattan distance matching   
-   - *delta_n*: caliper parameter.   
-   - *scale*: a specified scale parameter to control the relative weight that
-  is attributed to the distance measures of the exposure versus the GPS.   
-   - *covar_bl_method*: covariate balance method. Available options:   
-      - 'absolute'   
-   - *covar_bl_trs*: covariate balance threshold   
-   - *covar_bl_trs_type*: covariate balance type (mean, median, maximal)   
-   - *max_attempt*: maximum number of attempt to satisfy covariate balance.   
-   - See [create_matching()] for more details about the parameters and default
-   values.   
- - if ci.appr = 'weighting':   
-   - *covar_bl_method*: Covariate balance method.   
-   - *covar_bl_trs*: Covariate balance threshold   
-   - *max_attempt*: Maximum number of attempt to satisfy covariate balance.
-   
-- Generating Pseudo Population
+   - `delta_n`: caliper parameter.   
+   - `scale`: a specified scale parameter to control the relative weight that is attributed to the distance measures of the exposure versus the GPS.  
+
+### Estimating psuedo population
+
+The pseudo population is created by combining the counter_weight of data samples with the original data, including the outcome variable.
 
 ```r
-pseudo_pop <- generate_pseudo_pop(w,
-                                  c,
-                                  ci_appr = "matching",
-                                  gps_density = "normal",
-                                  use_cov_transform = TRUE,
-                                  transformers = list("pow2", "pow3"),
-                                  sl_lib = c("m_xgboost"),
-                                  params = list(xgb_nrounds = 50,
-                                                xgb_max_depth = 6,
-                                                xgb_eta = 0.3,
-                                                xgb_min_child_weight = 1),
-                                  nthread = 1,
-                                  covar_bl_method = "absolute",
-                                  covar_bl_trs = 0.1,
-                                  exposure_trim_qtls = c(0.01,0.99),
-                                  max_attempt = 1,
-                                  dist_measure = "l1",
-                                  delta_n = 1,
-                                  scale = 1)
-
+pseudo_pop_matching <- generate_pseudo_pop(.data = m_d,
+                                            cw_obj = cw_object_matching,
+                                            covariate_col_names = c("cf1", "cf2", "cf3",
+                                                                    "cf4", "cf5", "cf6"),
+                                            covar_bl_trs = 0.1,
+                                            covar_bl_trs_type = "maximal",
+                                            covar_bl_method = "absolute")
 ```
-`matching_fn` is Manhattan distance matching approach. For prediction model we use [SuperLearner](https://github.com/ecpolley/SuperLearner) package. SuperLearner supports different machine learning methods and packages. `params` is a list of hyperparameters that users can pass to the third party libraries in the SuperLearner package. All hyperparameters go into the params list.  The prefixes are used to distinguished parameters for different libraries. The following table shows the external package names, their equivalent name that should be used in `sl_lib`, the prefixes that should be used for their hyperparameters in the `params` list, and available hyperparameters. 
 
-| Package name | `sl_lib` name | prefix| available hyperparameters |
-|:------------:|:-------------:|:-----:|:-------------------------:|
-| [XGBoost](https://xgboost.readthedocs.io/en/latest/index.html)| `m_xgboost` | `xgb_`|  nrounds, eta, max_depth, min_child_weight |
-| [ranger](https://cran.r-project.org/package=ranger) |`m_ranger`| `rgr_` | num.trees, write.forest, replace, verbose, family |
+where
 
-`nthread` is the number of available threads (cores). XGBoost needs OpenMP installed on the system to parallel the processing. `use_covariate_transform` activates transforming covariates in order to achieve covariate balance. Users can pass custom function name in a list to be included in the processing. At each iteration, which is set by the users using `max_attempt`, the column that provides the worst covariate balance will be transformed.  
+- `covar_bl_method`: covariate balance method. Available options:   
+  - 'absolute'   
+- `covar_bl_trs`: covariate balance threshold   
+- `covar_bl_trs_type`: covariate balance type (mean, median, maximal)   
 
-- Estimating GPS
+
+### Estimating exposure response function
+
+The exposure-response function can be computed using parametric, semiparametric, and nonparametric approaches.
 
 ```r
-data_with_gps <- estimate_gps(w,
-                              c,
-                              gps_density = "normal",
-                              params = list(xgb_nrounds = 50,
-                                            xgb_max_depth = 6,
-                                            xgb_eta = 0.3,
-                                            xgb_min_child_weight = 1),
-                              nthread = 1,                                
-                              sl_lib = c("m_xgboost")
-                              )
-
+erf_obj_nonparametric <- estimate_erf(.data = pseudo_pop_matching$.data,
+                                       .formula = Y ~ w,
+                                       weights_col_name = "counter_weight",
+                                       model_type = "nonparametric",
+                                       w_vals = seq(2,20,0.5),
+                                       bw_seq = seq(0.2,2,0.2),
+                                       kernel_appr = "kernsmooth")
+                                       
 ```
 
-- Generating Pseudo Population with an available GPS object
+where
+
+- `w_vals`:  A numeric vector of values at which you want to calculate the exposure response function.  
+- `bw_seq`: A vector of bandwidth values.   
+- `kernel_appr`: Internal kernel approach. Available options are locpol and kernsmooth.   
+
+
+## Notes
+
+- Trimming data for extreme exposure value, or trimmming gps_obj for extreme GPS values, can be done by using `trim_it` function.
 
 ```r
-gps_obj <- estimate_gps(w,
-                        c,
-                        gps_density = "normal",
-                        params = list(xgb_max_depth = c(3,4,5),
-                                      xgb_nrounds=c(10,20,30,40,50,60)),
-                        nthread = 1,
-                        sl_lib = c("m_xgboost")
-                        )
-
-pseudo_pop <- generate_pseudo_pop(w,
-                                  c,
-                                  ci_appr = "matching",
-                                  gps_obj = gps_obj,
-                                  use_cov_transform = TRUE,
-                                  trim_quantiles = c(0.01,0.99),
-                                  covar_bl_method = "absolute",
-                                  covar_bl_trs = 0.1,
-                                  covar_bl_trs_type = "mean",
-                                  dist_measure = "l1",
-                                  max_attempt = 1,
-                                  delta_n = 1,
-                                  scale = 0.5,
-                                  nthread = 12)
-
+trimmed_data <- trim_it(data_obj = m_d,
+                        trim_quantiles = c(0.05, 0.95),
+                        variable = "w")
 ```
 
-- Estimating Exposure Rate Function
+-  For the prediction model, we use the [SuperLearner](https://github.com/ecpolley/SuperLearner) package. Users must prepare a wrapper function for the options available in SuperLearner to have a function with customized parameters. For instance, in the code below, we override the default values of nthread, ntrees, shrinkage, and max_depth. For example, in the following code, we override `nthread`, `ntrees`, `shrinkage`, and `max_depth` default values.
 
 ```r
-estimate_npmetric_erf <- function(matched_Y,
-                                  matched_w,
-                                  matched_counter = NULL,
-                                  bw_seq = seq(0.2,2,0.2),
-                                  w_vals,
-                                  nthread)
+m_xgboost <- function(nthread = 1,
+                      ntrees = 35,
+                      shrinkage = 0.3,
+                      max_depth = 5,
+                      ...) {SuperLearner::SL.xgboost(
+                        nthread = nthread,
+                        ntrees = ntrees,
+                        shrinkage=shrinkage,
+                        max_depth=max_depth,
+                        ...)}
 ```
 
-- Generating Synthetic Data
+- To test your code and run examples, you can generate synthetic data.
 
 ```r
 syn_data <- generate_syn_data(sample_size=1000,

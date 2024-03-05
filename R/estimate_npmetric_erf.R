@@ -31,37 +31,8 @@
 #' - erf
 #' - fcall
 #'
-#' @export
+#' @keywords internal
 #'
-#' @examples
-#' \donttest{
-#' set.seed(697)
-#' m_d <- generate_syn_data(sample_size = 200)
-#' pseudo_pop <- generate_pseudo_pop(m_d[, c("id", "w")],
-#'                                   m_d[, c("id", "cf1","cf2","cf3",
-#'                                         "cf4","cf5","cf6")],
-#'                                   ci_appr = "matching",
-#'                                   pred_model = "sl",
-#'                                   sl_lib = c("m_xgboost"),
-#'                                   params = list(xgb_nrounds=c(10,20,30),
-#'                                    xgb_eta=c(0.1,0.2,0.3)),
-#'                                   nthread = 1,
-#'                                   covar_bl_method = "absolute",
-#'                                   covar_bl_trs = 0.1,
-#'                                   covar_bl_trs_type="mean",
-#'                                   max_attempt = 1,
-#'                                   dist_measure = "l1",
-#'                                   delta_n = 1,
-#'                                   scale = 0.5)
-#'
-#' data <- merge(m_d[, c("id", "Y")], pseudo_pop$pseudo_pop, by = "id")
-#' erf_obj <- estimate_npmetric_erf(data$Y,
-#'                                  data$w,
-#'                                  data$counter_weight,
-#'                                  bw_seq=seq(0.2,2,0.2),
-#'                                  w_vals = seq(2,20,0.5),
-#'                                  nthread = 1)
-#'}
 estimate_npmetric_erf<-function(m_Y,
                                 m_w,
                                 counter_weight,
@@ -116,6 +87,15 @@ estimate_npmetric_erf<-function(m_Y,
                                      w_vals = w_vals,
                                      x_eval = NULL,
                                      kernel_appr = kernel_appr)
+
+  # risk_val_1 <-  lapply(bw_seq,
+  #                                    compute_risk,
+  #                                    matched_Y = m_Y,
+  #                                    matched_w = m_w,
+  #                                    matched_cw = counter_weight,
+  #                                    w_vals = w_vals,
+  #                                    x_eval = NULL,
+  #                                    kernel_appr = kernel_appr)
 
   parallel::stopCluster(cl)
 
