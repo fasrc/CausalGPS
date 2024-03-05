@@ -120,6 +120,11 @@ generate_pseudo_pop <- function(.data,
     covar_bl_trs = covar_bl_trs,
     covar_bl_trs_type = covar_bl_trs_type)
 
+  covar_bl_t <- paste0(covar_bl_trs_type, "_absolute_corr")
+  message(paste0(covar_bl_trs_type, " absolute correlation (original): ",
+                getElement(original_corr_obj$corr_results, covar_bl_t),
+                "| Covariate balance threshold: ", covar_bl_trs))
+
   # Check covariate balance for weighted/matched data, and trimmed if any
   adjusted_corr_obj <- check_covar_balance(
     w = merged_data[, c(exposure_col)],
@@ -129,6 +134,10 @@ generate_pseudo_pop <- function(.data,
     covar_bl_method = covar_bl_method,
     covar_bl_trs = covar_bl_trs,
     covar_bl_trs_type = covar_bl_trs_type)
+
+  message(paste0(covar_bl_trs_type, " absolute correlation (adjusted): ",
+                 getElement(adjusted_corr_obj$corr_results, covar_bl_t),
+                 "| Covariate balance threshold: ", covar_bl_trs))
 
   # check Kolmogorov-Smirnov statistics
   ks_stats <- check_kolmogorov_smirnov(w = merged_data[, c(exposure_col)],
@@ -181,11 +190,6 @@ generate_pseudo_pop <- function(.data,
 
   end_time_gpp <- proc.time()
 
-  # logger::log_debug("Wall clock time to run generate_pseudo_pop:",
-  #                   " {(end_time_gpp -   st_time_gpp)[[3]]} seconds.")
-  # logger::log_debug("Covariate balance condition has been met (TRUE/FALSE):",
-  #                   " {adjusted_corr_obj$pass}, (iteration:",
-  #                   " {counter} / {max_attempt})")
   invisible(result)
   }
 
