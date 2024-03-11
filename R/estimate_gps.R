@@ -47,9 +47,6 @@ estimate_gps <- function(.data,
 
   start_time <- proc.time()
 
-  # Check passed arguments -----------------------------------------------------
-  check_args_estimate_gps(gps_density, ...)
-
   id_exist <- any(colnames(.data) %in% "id")
   if (!id_exist) stop(".data should include id column.")
 
