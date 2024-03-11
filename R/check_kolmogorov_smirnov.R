@@ -28,10 +28,7 @@ check_kolmogorov_smirnov <- function(w,
 
   logger::log_debug("Started checking Kolmogorov-Smirnov (KS) statistics ... ")
   s_ks_t <- proc.time()
-#
-#   data.table::setDF(w)
-#   data.table::setDF(c)
-#   data.table::setDF(counter_weight)
+
   tmp_data <- cbind(w, c)
 
   if (!(ci_appr %in% c("matching", "weighting"))) {

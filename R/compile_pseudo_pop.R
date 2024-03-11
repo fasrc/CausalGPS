@@ -79,8 +79,6 @@ compile_pseudo_pop <- function(data_obj,
 
   dist_measure <- delta_n <- bin_seq <- NULL
 
-  # Checking arguments
-  # check_args_compile_pseudo_pop(ci_appr = ci_appr, ...)
 
   if (!(is.object(data_obj) && !isS4(data_obj))) {
     stop("data_obj should be a S3 object.")
