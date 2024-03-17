@@ -18,7 +18,8 @@
 #'
 #' @return
 #' The function returns a S3 object. Including the following:
-#'   - `.data `: `id`, `w`, `gps`, `e_gps_pred`, `e_gps_std_pred`, `w_resid`
+#'   - `.data `: `id`, `exposure_var`, `gps`, `e_gps_pred`, `e_gps_std_pred`,
+#'   `w_resid`
 #'   - `params`: Including the following fields:
 #'     - gps_mx (min and max of gps)
 #'     - w_mx (min and max of w).
@@ -113,7 +114,10 @@ estimate_gps <- function(.data,
   gps_mx <- compute_min_max(gps)
 
   # create new data.frame for output
-  dataset <- data.frame(id = .data$id, w = response_data, gps = gps)
+  dataset <- setNames(data.frame(.data$id,
+                                 response_data,
+                                 gps),
+                      c("id", response_var, "gps"))
   dataset$e_gps_pred <- e_gps_pred
   if (length(e_gps_std_pred) == 1){
     e_gps_std_pred <- rep(e_gps_std_pred, nrow(dataset))
