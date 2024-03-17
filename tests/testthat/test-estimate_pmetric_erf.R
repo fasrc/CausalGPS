@@ -2,10 +2,10 @@ test_that("estimate_pmetric_erf works as expected", {
 
 
   # Weighting
-  skip_on_cran()
   data.table::setDTthreads(1)
   set.seed(6451)
-  gnm_model <-  estimate_pmetric_erf(Y ~ w + cf5,
+  gnm_model <-  estimate_pmetric_erf(
+                            Y ~ w + cf5,
                             family = gaussian,
                             data = pseudo_pop_weight_test,
                             verbose = FALSE,
@@ -22,8 +22,5 @@ test_that("estimate_pmetric_erf works as expected", {
                                      family = gaussian,
                                      data = data_1)
   expect_equal(gnm_model$coefficients[3][[1]], 2.789947, tolerance = 0.00001)
-
-
-
 
 })

@@ -34,13 +34,6 @@ create_matching <- function(.data,
 
   # ------------------------------------------------------
 
-  # dot_args <- list(...)
-  # arg_names <- names(dot_args)
-  #
-  # for (i in arg_names) {
-  #   assign(i, unlist(dot_args[i], use.names = FALSE))
-  # }
-
   gps_mx <- compute_min_max(.data[["gps"]])
   w_mx <- compute_min_max(.data[[exposure_col_name]])
 

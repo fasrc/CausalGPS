@@ -88,20 +88,8 @@ generate_pseudo_pop <- function(.data,
   # function call
   fcall <- match.call()
 
-  # Check arguments ----------------------------------------
-  # check_args(ci_appr, use_cov_transform, transformers,
-  #            gps_density, exposure_trim_qtls, ...)
-
   # Generate output set ------------------------------------
   counter <- 0
-
-  ## collect additional arguments
-  # dot_args <- list(...)
-  # arg_names <- names(dot_args)
-  #
-  # for (i in arg_names){
-  #   assign(i, unlist(dot_args[i], use.names = FALSE))
-  # }
 
   # collect exposure and covariate columns
   exposure_col <- cw_obj$params$exposure_col
@@ -161,17 +149,6 @@ generate_pseudo_pop <- function(.data,
   class(result) <- "cgps_pspop"
 
   result$params$ci_appr <- cw_obj$params$ci_appr
-  #result$params$params <- params
-  # for (item in arg_names){
-  #   result$params[[item]] <- get(item)
-  # }
-
-
-  # if (include_original_data){
-  #   result$original_data <- original_data
-  # }
-
-  # result$original_data_size <- nrow(original_data)
 
   result$.data <- merged_data
   result$params$adjusted_corr_results <- adjusted_corr_obj$corr_results

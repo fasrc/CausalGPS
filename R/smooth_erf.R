@@ -41,7 +41,8 @@ smooth_erf <- function(matched_Y,
 
   } else if (kernel_appr == "kernsmooth") {
 
-    smoothed_val <- smooth_erf_kernsmooth(matched_Y = matched_Y,
+    smoothed_val <- smooth_erf_kernsmooth(
+                                          matched_Y = matched_Y,
                                           matched_w = matched_w,
                                           matched_cw = matched_cw,
                                           x_eval = x_eval,

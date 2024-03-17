@@ -47,8 +47,6 @@ matching_fn <- function(w,
     stop("w should be a vector of size 1.")
   }
 
-  #dataset$w <- dataset[[exposure_col_name]]
-
   logger::log_debug("Started matching on single w value (w = {w}) ...")
   st_ml_t <- proc.time()
 
