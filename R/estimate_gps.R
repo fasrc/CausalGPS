@@ -114,9 +114,9 @@ estimate_gps <- function(.data,
   gps_mx <- compute_min_max(gps)
 
   # create new data.frame for output
-  dataset <- setNames(data.frame(.data$id,
-                                 response_data,
-                                 gps),
+  dataset <- stats::setNames(data.frame(.data$id,
+                                        response_data,
+                                        gps),
                       c("id", response_var, "gps"))
   dataset$e_gps_pred <- e_gps_pred
   if (length(e_gps_std_pred) == 1){

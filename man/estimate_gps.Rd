@@ -31,7 +31,8 @@ SuperLearner packageg.}
 \value{
 The function returns a S3 object. Including the following:
 \itemize{
-\item \code{.data }: \code{id}, \code{w}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred}, \code{w_resid}
+\item \code{.data }: \code{id}, \code{exposure_var}, \code{gps}, \code{e_gps_pred}, \code{e_gps_std_pred},
+\code{w_resid}
 \item \code{params}: Including the following fields:
 \itemize{
 \item gps_mx (min and max of gps)
