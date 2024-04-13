@@ -1,4 +1,8 @@
-## CausalGPS (Developing)
+## CausalGPS 0.4.2 (2024-04-13)
+
+### Added
+
+* heads-up message about changes in the software design that will be implemented in CausalGPS version 0.5.x.
 
 
 ## CausalGPS 0.4.1 (2023-09-29)
