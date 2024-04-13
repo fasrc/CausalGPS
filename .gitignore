@@ -2,6 +2,8 @@
 .Rproj.user/*
 .Rhistory
 .RData
+*.RData
+*.rds
 .Ruserdata
 inst/doc
 tests/testthat/_snaps/*
@@ -17,4 +19,4 @@ src-i386
 functional_tests/supplements/*
 *zip_data.RData
 *log*
-*.rds
+*a.rds

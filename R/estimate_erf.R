@@ -207,8 +207,6 @@ estimate_erf <- function(.data,
     result_data_prediction <- data.frame(w_vals = w_vals,
                                          y_pred = y_pred)
 
-    print(erf_np)
-
   } else {
     stop("The code should never get here. Double check.")
   }
