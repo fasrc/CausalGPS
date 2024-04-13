@@ -75,7 +75,7 @@ matching_fn <- function(w,
   std_w <- (w - w_min) / (w_max - w_min)
   std_p_w <- (p_w - gps_min) / (gps_max - gps_min)
 
-  dataset_subset <- dataset[abs(dataset[["w"]] - w) <= (delta_n / 2), ]
+  dataset_subset <- dataset[abs(dataset[[exposure_col_name]] - w) <= (delta_n / 2), ]
 
   if (nrow(dataset_subset) < 1){
     logger:: log_warn(paste("There is no data to match with ", w, "in ",
