@@ -7,6 +7,14 @@
                                                    sep = ""))
 
   logger::log_layout(flogger, index = 1)
-  # RNGkind(kind = "L'Ecuyer-CMRG")
+}
 
+.onAttach <- function(libname, pkgname){
+  packageStartupMessage(paste0(
+    "              ****                 \n"
+    ,"The CausalGPS version 0.5.x will undergo significant design changes. "
+    ,"Please be prepared to update your code accordingly, or consider "
+    ,"continuing with version 0.4.x until you are ready to update.\n"
+    ,"              ****                 \n"
+  ))
 }
