@@ -3,6 +3,7 @@
 .Rhistory
 .RData
 *.RData
+*.rds
 .Ruserdata
 inst/doc
 tests/testthat/_snaps/*
