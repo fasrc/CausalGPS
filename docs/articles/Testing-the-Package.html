@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">CausalGPS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@ use forking. In the following, we explain all these options.</p>
 <div class="section level3">
 <h3 id="installing-the-package">Installing the Package<a class="anchor" aria-label="anchor" href="#installing-the-package"></a>
 </h3>
-<p>Use <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">devtools::install_github</a></code> to install the package. If
+<p>Use <code><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">devtools::install_github</a></code> to install the package. If
 you do not specify the <code>ref</code>, it will install the master (or
 main) branch. The <code>master</code> branch hosts the latest released
 code. The latest updates are committed to the <code>develop</code>
@@ -127,7 +127,7 @@ the Developers Guide section.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:CausalGPS"</span>, unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># if already you have the package, detach and unload it, to have a new install. </span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"NSAPH-Software/CausalGPS"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"NSAPH-Software/CausalGPS"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/NSAPH-Software/CausalGPS" class="external-link">CausalGPS</a></span><span class="op">)</span></span></code></pre></div>
 <p>The process should run smoothly. Try <code><a href="../reference/CausalGPS-package.html">?CausalGPS</a></code>. It
 should open the package description page under the help tab (assuming
@@ -162,33 +162,33 @@ testing, you do not need to know all steps. Here is the list of commands
 that you need:</p>
 <ul>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">document()</a></code> if you change Roxygen Skeleton (e.g., you
+<code><a href="https://rdrr.io/pkg/devtools/man/document.html" class="external-link">document()</a></code> if you change Roxygen Skeleton (e.g., you
 added new argument to the function, or improved the example), run
 <code>documents()</code>. It will make sure that your internal
 documentation is updated.</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test()</a></code> runs all tests that is located inside the
+<code><a href="https://rdrr.io/pkg/devtools/man/test.html" class="external-link">test()</a></code> runs all tests that is located inside the
 <code>tests/testthat</code> folder. Any modification to the code should
-be followed by running <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">test()</a></code> to make sure that you are not
+be followed by running <code><a href="https://rdrr.io/pkg/devtools/man/test.html" class="external-link">test()</a></code> to make sure that you are not
 breaking existing functionality.</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check()</a></code> checks many other features (e.g., whether the
+<code><a href="https://rdrr.io/pkg/devtools/man/check.html" class="external-link">check()</a></code> checks many other features (e.g., whether the
 package can be installed without problem). You do not need to run
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check()</a></code> frequently; however, we would suggest running it
+<code><a href="https://rdrr.io/pkg/devtools/man/check.html" class="external-link">check()</a></code> frequently; however, we would suggest running it
 once you get the code and once before committing to make sure that there
 are no errors, warnings, and notes.</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all()</a></code> the program source code is different than
+<code><a href="https://rdrr.io/pkg/devtools/man/load_all.html" class="external-link">load_all()</a></code> the program source code is different than
 the one which is loaded on your memory (read more <a href="https://r-pkgs.org/package-structure-state.html" class="external-link">here</a>). If you
 modify some part of the code, you need to load it on memory to takes the
-latest modifications effect. Run <code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all()</a></code> after
+latest modifications effect. Run <code><a href="https://rdrr.io/pkg/devtools/man/load_all.html" class="external-link">load_all()</a></code> after
 modification and before testing.</li>
 <li>
-<code><a href="https://devtools.r-lib.org/reference/install.html" class="external-link">install()</a></code> in most of the cases <code><a href="https://devtools.r-lib.org/reference/load_all.html" class="external-link">load_all()</a></code>
+<code><a href="https://rdrr.io/pkg/devtools/man/install.html" class="external-link">install()</a></code> in most of the cases <code><a href="https://rdrr.io/pkg/devtools/man/load_all.html" class="external-link">load_all()</a></code>
 is sufficient. However, sometimes the links between package components
 are broken. It especially happens when you significantly change some
 part of the code, and it does not pass the tests. In such cases, you may
-need to run <code><a href="https://devtools.r-lib.org/reference/install.html" class="external-link">install()</a></code>.</li>
+need to run <code><a href="https://rdrr.io/pkg/devtools/man/install.html" class="external-link">install()</a></code>.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -413,10 +413,10 @@ pre-computed data set to test your functions. In the following, we
 explain the steps to append data to “R/sysdata.rda”. Please note that
 CRAN might reject large data sets.</p>
 <ul>
-<li><p>Step 1: Run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check()</a></code> to make sure that the file as-is
+<li><p>Step 1: Run <code><a href="https://rdrr.io/pkg/devtools/man/check.html" class="external-link">check()</a></code> to make sure that the file as-is
 satisfies all test requirements. If it raises an error, warning, or
 note, please address them before modifying the data. In some rare cases,
-<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">check()</a></code> does not pass successfully, however, test() does.
+<code><a href="https://rdrr.io/pkg/devtools/man/check.html" class="external-link">check()</a></code> does not pass successfully, however, test() does.
 This is sufficient for changing the data; however, you need to address
 it before submitting a pull request.</p></li>
 <li><p>Step 2: Create a backup data from the current data.</p></li>
