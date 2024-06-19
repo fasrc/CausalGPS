@@ -27,8 +27,6 @@ NULL is passed the default value will be used, which is
 \code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
 
 \item{nthread}{Number of available cores.}
-
-\item{...}{Additional arguments passed to the function.}
 }
 \value{
 Returns data.table of matched set.

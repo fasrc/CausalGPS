@@ -11,7 +11,6 @@
 #' @param gps_density Model type which is used for estimating GPS value, including
 #' `normal` (default) and `kernel`.
 #' @param nthread Number of available cores.
-#' @param ...  Additional arguments passed to the function.
 #'
 #' @return
 #' Returns data.table of matched set.
