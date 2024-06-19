@@ -1,15 +1,11 @@
-Submission (April 13, 2024)
+Submission (June 19, 2024)
 
-Thank you so much for taking the time and reviewing the CausalGPS 0.4.2 package. In this version upgrade we:
+Thank you so much for taking the time and reviewing the CausalGPS 0.5.0 package. In this version upgrade we:
 
-- Provided a heads-up message about changes in the software design that will be implemented in CausalGPS version 0.5.x. Since the package has no reverse dependencies, the transition is expected to be smooth. 
-
-
-The package tested locally and on rhub and passed all tests and checks successfully.
+- Added formula to collect features from the user
 
 Best regards, 
 Naeem Khoshnevis
-
-Senior ML Research Engineer
-Kempner Institute
+Senior ML Research Engineer 
+Kempner Institute 
 Harvard University

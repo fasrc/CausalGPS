@@ -75,26 +75,25 @@ approaches.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_gps</span><span class="op">(</span></span>
-<span>  <span class="va">w</span>,</span>
-<span>  <span class="va">c</span>,</span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">.formula</span>,</span>
 <span>  gps_density <span class="op">=</span> <span class="st">"normal"</span>,</span>
-<span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span>,</span>
-<span>  nthread <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL.xgboost"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>w</dt>
-<dd><p>A data frame of observed continuous exposure variable. Including
-<code>id</code> and <code>w</code> columns.</p></dd>
+    <dl><dt>.data</dt>
+<dd><p>A data frame of observed continuous exposure variable and
+observed covariates variable. Also includes <code>id</code> column for future
+references.</p></dd>
 
 
-<dt>c</dt>
-<dd><p>A data frame of observed covariates variable. Also includes <code>id</code>
-column.</p></dd>
+<dt>.formula</dt>
+<dd><p>A formula specifying the relationship between the exposure
+variable and the covariates. For example, w ~ I(cf1^2) + cf2.</p></dd>
 
 
 <dt>gps_density</dt>
@@ -102,18 +101,9 @@ column.</p></dd>
 including <code>normal</code> (default) and <code>kernel</code>.</p></dd>
 
 
-<dt>params</dt>
-<dd><p>Includes list of parameters that are used internally. Unrelated
-parameters will be ignored.</p></dd>
-
-
 <dt>sl_lib</dt>
-<dd><p>A vector of prediction algorithms.</p></dd>
-
-
-<dt>nthread</dt>
-<dd><p>An integer value that represents the number threads to be used
-in a shared memory system.</p></dd>
+<dd><p>A vector of prediction algorithms to be used by the
+SuperLearner packageg.</p></dd>
 
 
 <dt>...</dt>
@@ -124,34 +114,24 @@ in a shared memory system.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>The function returns a S3 object. Including the following:</p><ul><li><p><code>dataset </code>: <code>id</code>, <code>w</code>, <code>gps</code></p></li>
-<li><p>e_gps_pred</p></li>
-<li><p>e_gps_std_pred</p></li>
-<li><p>w_resid</p></li>
-<li><p>gps_mx (min and max of gps)</p></li>
+<p>The function returns a S3 object. Including the following:</p><ul><li><p><code>.data </code>: <code>id</code>, <code>w</code>, <code>gps</code>, <code>e_gps_pred</code>, <code>e_gps_std_pred</code>, <code>w_resid</code></p></li>
+<li><p><code>params</code>: Including the following fields:</p><ul><li><p>gps_mx (min and max of gps)</p></li>
 <li><p>w_mx (min and max of w).</p></li>
-<li><p>used_params</p></li>
+<li><p>.formula</p></li>
+<li><p>gps_density</p></li>
+<li><p>sl_lib</p></li>
+<li><p>fcall (function call)</p></li>
+</ul></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>If <code>internal.use</code> is set to be FALSE, only original data set + GPS will
-be returned.</p>
-<p>The outcome variable is not used in estimating the GPS value. However, it is
-used in compiling the data set with GPS values.</p>
-    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="va">m_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_syn_data.html">generate_syn_data</a></span><span class="op">(</span>sample_size <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">data_with_gps</span> <span class="op">&lt;-</span> <span class="fu">estimate_gps</span><span class="op">(</span><span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"w"</span><span class="op">)</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>                              <span class="va">m_d</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"cf1"</span>, <span class="st">"cf2"</span>, <span class="st">"cf3"</span>,</span></span>
-<span class="r-in"><span>                                      <span class="st">"cf4"</span>, <span class="st">"cf5"</span>, <span class="st">"cf6"</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span><span class="va">data_with_gps</span> <span class="op">&lt;-</span> <span class="fu">estimate_gps</span><span class="op">(</span>.data <span class="op">=</span> <span class="va">m_d</span>,</span></span>
+<span class="r-in"><span>                              .formula <span class="op">=</span> <span class="va">w</span> <span class="op">~</span> <span class="va">cf1</span> <span class="op">+</span> <span class="va">cf2</span> <span class="op">+</span> <span class="va">cf3</span> <span class="op">+</span> <span class="va">cf4</span> <span class="op">+</span> <span class="va">cf5</span> <span class="op">+</span> <span class="va">cf6</span>,</span></span>
 <span class="r-in"><span>                              gps_density <span class="op">=</span> <span class="st">"normal"</span>,</span></span>
-<span class="r-in"><span>                              params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>xgb_max_depth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                                       xgb_nrounds<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">20</span>,<span class="fl">30</span>,<span class="fl">40</span>,<span class="fl">50</span>,<span class="fl">60</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                              nthread <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>                              sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_xgboost"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                              sl_lib <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SL.xgboost"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>                             <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>

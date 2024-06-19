@@ -29,6 +29,7 @@ RUN R -e "install.packages(c( \
     'wCorr', \
     'Ecume', \
     'logger', \
+    'cowplot' \
     'gnm'), repos='https://cloud.r-project.org')"
 
 ENV RENV_VERSION 0.17.3

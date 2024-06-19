@@ -91,7 +91,7 @@ absolute_weighted_corr_fun <- function(w,
   mean_val <- mean(absolute_corr, na.rm = TRUE)
 
   # compute median value
-  median_val <- median(absolute_corr, na.rm = TRUE)
+  median_val <- stats::median(absolute_corr, na.rm = TRUE)
 
   # Maximal value
   max_val <- max(absolute_corr, na.rm = TRUE)

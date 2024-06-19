@@ -2,42 +2,58 @@ test_that("check_kolmogorov_smirnov works as expected.", {
   skip_on_cran()
   data.table::setDTthreads(1)
   set.seed(8422)
-  n <- 200
-  mydata <- generate_syn_data(sample_size=n)
-  year <- sample(x=c("2001","2002","2003","2004","2005"),size = n, replace = TRUE)
-  region <- sample(x=c("North", "South", "East", "West"),size = n, replace = TRUE)
-  mydata$year <- as.factor(year)
-  mydata$region <- as.factor(region)
-  mydata$cf5 <- as.factor(mydata$cf5)
+  n <- 500
+  s_data <- generate_syn_data(sample_size = n,
+                              outcome_sd = 10,
+                              gps_spec = 1,
+                              cova_spec = 1)
 
-  pseudo_pop <- generate_pseudo_pop(mydata[, c("id", "w")],
-                                    mydata[, c("id", "cf1", "cf2", "cf3",
-                                               "cf4","cf5","cf6",
-                                               "year","region")],
-                                    ci_appr = "matching",
-                                    gps_density = "kernel",
-                                    exposure_trim_qtls = c(0.01,0.99),
-                                    sl_lib = c("m_xgboost"),
-                                    covar_bl_method = "absolute",
-                                    covar_bl_trs = 0.1,
-                                    covar_bl_trs_type = "mean",
-                                    max_attempt = 1,
-                                    dist_measure = "l1",
-                                    delta_n = 1,
-                                    scale = 0.5,
-                                    nthread = 1)
+  s_data$id <- seq_along(1:nrow(s_data))
+  m_xgboost <- function(nthread = 4,
+                        ntrees = 35,
+                        shrinkage = 0.3,
+                        max_depth = 5,
+                        ...) {SuperLearner::SL.xgboost(
+                          nthread = nthread,
+                          ntrees = ntrees,
+                          shrinkage=shrinkage,
+                          max_depth=max_depth,
+                          ...)}
 
-  output <- CausalGPS:::check_kolmogorov_smirnov(w = pseudo_pop$pseudo_pop[, c("w")],
-                                                 c = pseudo_pop$pseudo_pop[ ,
-                                                                            pseudo_pop$covariate_cols_name],
-                                                 counter = pseudo_pop$pseudo_pop[, c("counter_weight")],
-                                                 ci_appr="matching",
-                                                 nthread=1)
+  assign("m_xgboost", m_xgboost, envir = .GlobalEnv)
+
+  data_with_gps_1 <- estimate_gps(
+    .data = s_data,
+    .formula = w ~ I(cf1^2) + cf2 + I(cf3^2) + cf4 + cf5 + cf6,
+    sl_lib = c("m_xgboost"),
+    gps_density = "normal")
+
+  cw_object_matching <- compute_counter_weight(gps_obj = data_with_gps_1,
+                                               ci_appr = "matching",
+                                               bin_seq = NULL,
+                                               nthread = 1,
+                                               delta_n = 0.1,
+                                               dist_measure = "l1",
+                                               scale = 0.5)
+
+  ps_pop1 <- generate_pseudo_pop(.data = s_data,
+                                 cw_obj = cw_object_matching,
+                                 covariate_col_names = c("cf1", "cf2",
+                                                         "cf3", "cf4",
+                                                         "cf5", "cf6"),
+                                 covar_bl_trs = 0.1,
+                                 covar_bl_trs_type = "maximal",
+                                 covar_bl_method = "absolute")
+
+  output <- CausalGPS:::check_kolmogorov_smirnov(w = ps_pop1$.data[, c("w")],
+                                                 c = ps_pop1$.data[, ps_pop1$params$covariate_col_names],
+                                                 counter = ps_pop1$.data[, c("counter_weight")],
+                                                 ci_appr="matching")
 
   expect_equal(length(output), 2L)
-  expect_equal(length(output$ks_stat), 9L)
+  expect_equal(length(output$ks_stat), 7L)
   expect_equal(length(output$stat_vals), 3L)
-  expect_equal(output$ks_stat[["w"]], 0.1098639, tolerance = 0.000001)
-  expect_equal(output$ks_stat[["cf3"]], 0.1319728, tolerance = 0.000001)
-  expect_equal(output$stat_vals[["maximal_val"]], 0.1931973, tolerance = 0.000001)
+  expect_equal(output$ks_stat[["w"]], 0.041004785, tolerance = 0.000001)
+  expect_equal(output$ks_stat[["cf1"]], 0.008191388, tolerance = 0.000001)
+  expect_equal(output$stat_vals[["maximal_val"]], 0.04100478, tolerance = 0.000001)
 })

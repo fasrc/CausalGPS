@@ -4,45 +4,37 @@
 #' @description
 #' Generates pseudo population based on matching casual inference method.
 #'
-#' @param data_obj A list of elements. Including An original dataset as well
-#'  as helper vectors from estimating GPS. See [compile_pseudo_pop()] for more
-#'  details.
+#' @param .data TBD
 #' @param bin_seq Sequence of w (treatment) to generate pseudo population. If
 #' NULL is passed the default value will be used, which is
 #' `seq(min(w)+delta_n/2,max(w), by=delta_n)`.
 #' @param gps_density Model type which is used for estimating GPS value, including
 #' `normal` (default) and `kernel`.
 #' @param nthread Number of available cores.
-#' @param ...  Additional arguments passed to the function.
 #'
 #' @return
 #' Returns data.table of matched set.
 #'
 #' @keywords internal
 #'
-create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
-                            gps_density = "normal",
-                            nthread = 1, ...) {
+create_matching <- function(.data,
+                            exposure_col_name,
+                            matching_fn,
+                            dist_measure = dist_measure,
+                            gps_density = gps_density,
+                            delta_n = delta_n,
+                            scale = scale,
+                            bin_seq = NULL,
+                            nthread = 1) {
 
   # Passing packaging check() ----------------------------
-  delta_n <- NULL
   counter_weight <- NULL
   i.counter_weight <- NULL
-  dist_measure <- NULL
+
   # ------------------------------------------------------
 
-  dot_args <- list(...)
-  arg_names <- names(dot_args)
-
-  for (i in arg_names) {
-    assign(i, unlist(dot_args[i], use.names = FALSE))
-  }
-
-  #matching_fun <- get(matching_fun)
-
-  gps_mx <- data_obj$gps_mx
-  w_mx <- data_obj$w_mx
-
+  gps_mx <- compute_min_max(.data[["gps"]])
+  w_mx <- compute_min_max(.data[[exposure_col_name]])
 
     if (is.null(bin_seq)) {
 
@@ -64,11 +56,11 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
 
     matched_set <-  lapply(bin_num,
                            matching_fn,
-                           dataset=data_obj$dataset,
+                           dataset=.data,
                            exposure_col_name = exposure_col_name,
-                           e_gps_pred = data_obj$dataset$e_gps_pred,
-                           e_gps_std_pred = data_obj$dataset$e_gps_std_pred,
-                           w_resid=data_obj$dataset$w_resid,
+                           e_gps_pred = .data$e_gps_pred,
+                           e_gps_std_pred = .data$e_gps_std_pred,
+                           w_resid=.data$w_resid,
                            gps_mx = gps_mx,
                            w_mx = w_mx,
                            dist_measure = dist_measure,
@@ -85,7 +77,7 @@ create_matching <- function(data_obj, exposure_col_name, bin_seq = NULL,
 
     s_comp_p <- proc.time()
 
-    cp_original_data <- data_obj$dataset
+    cp_original_data <- .data
 
     # create initial freq_table
     logger::log_debug("Started working on merging the frequency table  ... ")

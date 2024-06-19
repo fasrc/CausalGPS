@@ -26,27 +26,4 @@ parametric models
 \details{
 This method uses generalized nonlinear model (gnm) from gnm package.
 }
-\examples{
-\donttest{
-m_d <- generate_syn_data(sample_size = 100)
-pseudo_pop <- generate_pseudo_pop(m_d[, c("id", "w")],
-                                  m_d[, c("id", "cf1","cf2","cf3",
-                                          "cf4","cf5","cf6")],
-                                  ci_appr = "matching",
-                                  sl_lib = c("m_xgboost"),
-                                  params = list(xgb_nrounds=c(10,20,30),
-                                  xgb_eta=c(0.1,0.2,0.3)),
-                                  nthread = 1,
-                                  covar_bl_method = "absolute",
-                                  covar_bl_trs = 0.1,
-                                  covar_bl_trs_type= "mean",
-                                  max_attempt = 1,
-                                  dist_measure = "l1",
-                                  delta_n = 1,
-                                  scale = 0.5)
-data <- merge(m_d[, c("id", "Y")], pseudo_pop$pseudo_pop, by = "id")
-outcome_m <- estimate_pmetric_erf(formula = Y ~ w,
-                                  family = gaussian,
-                                  data = data)
-}
-}
+\keyword{internal}

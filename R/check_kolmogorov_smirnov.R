@@ -11,7 +11,6 @@
 #' @param counter_weight A weight vector in different situations. If the
 #' matching approach is selected, it is an integer data.table of counters.
 #' In the case of the weighting approach, it is weight data.table.
-#' @param nthread The number of available threads.
 #'
 #' @return
 #' output object is list including:
@@ -25,15 +24,11 @@
 check_kolmogorov_smirnov <- function(w,
                                      c,
                                      ci_appr,
-                                     counter_weight = NULL,
-                                     nthread = 1) {
+                                     counter_weight = NULL) {
 
   logger::log_debug("Started checking Kolmogorov-Smirnov (KS) statistics ... ")
   s_ks_t <- proc.time()
-#
-#   data.table::setDF(w)
-#   data.table::setDF(c)
-#   data.table::setDF(counter_weight)
+
   tmp_data <- cbind(w, c)
 
   if (!(ci_appr %in% c("matching", "weighting"))) {

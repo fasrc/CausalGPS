@@ -21,25 +21,35 @@ reference:
     contents:
     - generate_pseudo_pop
     - compile_pseudo_pop
+    - compute_counter_weight
     - check_covar_balance
     - absolute_corr_fun
     - absolute_weighted_corr_fun
   - title: Outcome models
     contents:
-    - estimate_npmetric_erf
-    - estimate_semipmetric_erf
-    - estimate_pmetric_erf
+    - estimate_erf
   - title: Utilities
     contents:
     - generate_syn_data
     - set_logger
     - get_logger
-    - plot.gpsm_erf
-    - plot.gpsm_pspop
-    - print.gpsm_erf
-    - print.gpsm_pspop
-    - summary.gpsm_erf
-    - summary.gpsm_pspop
+    - trim_it
+    - plot.cgps_cw
+    - plot.cgps_gps
+    - plot.cgps_erf
+    - plot.cgps_pspop
+    - print.cgps_gps
+    - print.cgps_cw
+    # - print.gpsm_erf
+    - print.cgps_erf
+    - print.cgps_pspop
+    - summary.cgps_erf
+    - summary.cgps_pspop
+    - summary.cgps_cw
+    - summary.cgps_gps
+    # - summary.gpsm_erf
+    # - summary.gpsm_pspop
+
   - title: Data
     contents:
     - synthetic_us_2010
@@ -51,7 +61,7 @@ articles:
                Generating-Pseudo-Population,
                Outcome-Models,
                Generating-Synthetic-Data,
-               Frequently-Asked-Questions,]
+               Frequently-Asked-Questions]
 
   - title: Collabration
     navbar: Collabration

@@ -10,14 +10,11 @@
 #' @param counter_weight A weight vector in different situations. If the
 #' matching approach is selected, it is an integer data.table of counters.
 #' In the case of the weighting approach, it is weight data.table.
-#' @param nthread The number of available threads.
-#' @param ... Additional arguments passed to different models.
+#' @param covar_bl_method Covariate balance method. Available options:
+#'      - 'absolute'
+#' @param covar_bl_trs Covariate balance threshold.
+#' @param covar_bl_trs_type Covariate balance type (mean, median, maximal).
 #'
-#' @details
-#' ## Additional parameters
-#'   - For ci_appr == matching:
-#'     - covar_bl_method
-#'     - covar_bl_trs
 #'
 #' @return
 #' output object:
@@ -32,79 +29,77 @@
 #' \donttest{
 #' set.seed(422)
 #' n <- 100
-#'mydata <- generate_syn_data(sample_size=100)
-#'year <- sample(x=c("2001","2002","2003","2004","2005"),size = n,
+#' mydata <- generate_syn_data(sample_size=n)
+#' year <- sample(x=c("2001","2002","2003","2004","2005"),size = n,
 #'               replace = TRUE)
-#'region <- sample(x=c("North", "South", "East", "West"),size = n,
+#' region <- sample(x=c("North", "South", "East", "West"),size = n,
 #'                 replace = TRUE)
-#'mydata$year <- as.factor(year)
-#'mydata$region <- as.factor(region)
-#'mydata$cf5 <- as.factor(mydata$cf5)
+#' mydata$year <- as.factor(year)
+#' mydata$region <- as.factor(region)
+#' mydata$cf5 <- as.factor(mydata$cf5)
+#'
+#' m_xgboost <- function(nthread = 1,
+#'                       ntrees = 35,
+#'                       shrinkage = 0.3,
+#'                       max_depth = 5,
+#'                       ...) {SuperLearner::SL.xgboost(
+#'                         nthread = nthread,
+#'                         ntrees = ntrees,
+#'                         shrinkage=shrinkage,
+#'                         max_depth=max_depth,
+#'                         ...)}
+#'
+#' data_with_gps <- estimate_gps(.data = mydata,
+#'                               .formula = w ~ cf1 + cf2 + cf3 + cf4 + cf5 +
+#'                                              cf6 + year + region,
+#'                               sl_lib = c("m_xgboost"),
+#'                               gps_density = "kernel")
 #'
 #'
+#' cw_object_matching <- compute_counter_weight(gps_obj = data_with_gps,
+#'                                              ci_appr = "matching",
+#'                                              bin_seq = NULL,
+#'                                              nthread = 1,
+#'                                              delta_n = 0.1,
+#'                                              dist_measure = "l1",
+#'                                              scale = 0.5)
 #'
-#'pseudo_pop <- generate_pseudo_pop(mydata[, c("id", "w")],
-#'                                  mydata[, c("id", "cf1", "cf2", "cf3",
-#'                                             "cf4","cf5", "cf6", "year",
-#'                                             "region")],
-#'                                  ci_appr = "matching",
-#'                                  gps_density = "kernel",
-#'                                  exposure_trim_qtls = c(0.01,0.99),
-#'                                  sl_lib = c("m_xgboost"),
-#'                                  covar_bl_method = "absolute",
-#'                                  covar_bl_trs = 0.1,
-#'                                  covar_bl_trs_type = "mean",
-#'                                  max_attempt = 1,
-#'                                  dist_measure = "l1",
-#'                                  delta_n = 1,
-#'                                  scale = 0.5,
-#'                                  nthread = 1)
+#' pseudo_pop <- generate_pseudo_pop(.data = mydata,
+#'                                   cw_obj = cw_object_matching,
+#'                                   covariate_col_names = c("cf1", "cf2", "cf3",
+#'                                                           "cf4", "cf5", "cf6",
+#'                                                           "year", "region"),
+#'                                   covar_bl_trs = 0.1,
+#'                                   covar_bl_trs_type = "maximal",
+#'                                   covar_bl_method = "absolute")
 #'
-#'adjusted_corr_obj <- check_covar_balance(w = pseudo_pop$pseudo_pop[, c("w")],
-#'                                         c = pseudo_pop$pseudo_pop[ ,
-#'                                         pseudo_pop$covariate_cols_name],
-#'                                         counter = pseudo_pop$pseudo_pop[,
-#'                                                     c("counter_weight")],
-#'                                         ci_appr = "matching",
-#'                                         nthread = 1,
-#'                                         covar_bl_method = "absolute",
-#'                                         covar_bl_trs = 0.1,
-#'                                         covar_bl_trs_type = "mean")
+#'
+#' adjusted_corr_obj <- check_covar_balance(w = pseudo_pop$.data[, c("w")],
+#'                                          c = pseudo_pop$.data[ ,
+#'                                          pseudo_pop$params$covariate_col_names],
+#'                                          counter = pseudo_pop$.data[,
+#'                                                      c("counter_weight")],
+#'                                          ci_appr = "matching",
+#'                                          covar_bl_method = "absolute",
+#'                                          covar_bl_trs = 0.1,
+#'                                          covar_bl_trs_type = "mean")
 #'}
 
 check_covar_balance <- function(w,
                                 c,
                                 ci_appr,
                                 counter_weight = NULL,
-                                nthread = 1,
-                                ...){
+                                covar_bl_method = "absolute",
+                                covar_bl_trs = 0.1,
+                                covar_bl_trs_type = "mean"){
 
-  # Passing packaging check() ----------------------------
-  covar_bl_method <- NULL
-  covar_bl_trs <- NULL
-  covar_bl_trs_type <- NULL
-  # ------------------------------------------------------
 
   logger::log_debug("Started checking covariate balance ... ")
   s_ccb_t <- proc.time()
 
-  # collect additional arguments
-  dot_args <- list(...)
-  arg_names <- names(dot_args)
-
-  for (i in arg_names){
-    assign(i,unlist(dot_args[i], use.names = FALSE))
-  }
-
   post_process_abs <- function(abs_cor) {
 
     covar_bl_t <- paste0(covar_bl_trs_type, "_absolute_corr")
-    logger::log_debug(paste0(covar_bl_trs_type,
-                            " absolute correlation: ",
-                            getElement(abs_cor, covar_bl_t)))
-    message(paste0(covar_bl_trs_type, " absolute correlation: ",
-                  getElement(abs_cor, covar_bl_t),
-                  "| Covariate balance threshold: ", covar_bl_trs))
 
     output <- list(corr_results = abs_cor)
 

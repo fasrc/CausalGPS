@@ -4,12 +4,12 @@
 \alias{create_weighting}
 \title{Create pseudo population using weighting casual inference approach}
 \usage{
-create_weighting(dataset, exposure_col_name, ...)
+create_weighting(dataset, exposure_col_name)
 }
 \arguments{
-\item{dataset}{The study data set.}
+\item{dataset}{A gps object data.}
 
-\item{...}{Additional parameters.}
+\item{exposure_col_name}{The exposure column name.}
 }
 \value{
 Returns a data table which includes the following columns:

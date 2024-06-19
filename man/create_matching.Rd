@@ -5,29 +5,28 @@
 \title{Create pseudo population using matching casual inference approach}
 \usage{
 create_matching(
-  data_obj,
+  .data,
   exposure_col_name,
+  matching_fn,
+  dist_measure = dist_measure,
+  gps_density = gps_density,
+  delta_n = delta_n,
+  scale = scale,
   bin_seq = NULL,
-  gps_density = "normal",
-  nthread = 1,
-  ...
+  nthread = 1
 )
 }
 \arguments{
-\item{data_obj}{A list of elements. Including An original dataset as well
-as helper vectors from estimating GPS. See \code{\link[=compile_pseudo_pop]{compile_pseudo_pop()}} for more
-details.}
+\item{.data}{TBD}
+
+\item{gps_density}{Model type which is used for estimating GPS value, including
+\code{normal} (default) and \code{kernel}.}
 
 \item{bin_seq}{Sequence of w (treatment) to generate pseudo population. If
 NULL is passed the default value will be used, which is
 \code{seq(min(w)+delta_n/2,max(w), by=delta_n)}.}
 
-\item{gps_density}{Model type which is used for estimating GPS value, including
-\code{normal} (default) and \code{kernel}.}
-
 \item{nthread}{Number of available cores.}
-
-\item{...}{Additional arguments passed to the function.}
 }
 \value{
 Returns data.table of matched set.
