@@ -1,270 +1,92 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/404.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/CausalGPS.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Developers-Guide.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/ERF-Kernel-Smoothing.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Estimating-GPS.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/FAQ.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Frequently-Asked-Questions.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Generating-Pseudo-Population.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Generating-Synthetic-Data.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Notes-on-SL-Wrapper.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Outcome-Models.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Singularity-Image.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Synthetic-Medicare.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/Testing-the-Package.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/index.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/CausalGPS-package.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/absolute_corr_fun.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/absolute_weighted_corr_fun.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_cw.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.gpsm_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.gpsm_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_compile_pseudo_pop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_estimate_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_use_cov_transformers.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_covar_balance.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_kolmogorov_smirnov.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compile_pseudo_pop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_closest_wgps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_counter_weight.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_density.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_min_max.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_outer.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_resid.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_risk.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/convert_data_into_standard_format.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/create_matching.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/create_weighting.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_hat_vals.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_npmetric_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_pmetric_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_semipmetric_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/gen_wrap_sl_lib.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_kernel.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_pseudo_pop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_syn_data.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/get_logger.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/log_system_info.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/matching_fn.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/matching_l1.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_cw.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.gpsm_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.gpsm_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/preprocess_data.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_cw.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.gpsm_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.gpsm_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/set_logger.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf_kernsmooth.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf_locpol.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_cw.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.gpsm_erf.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.gpsm_pspop.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/synthetic_us_2010.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/train_it.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/transform_it.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_gps.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_it.html</loc>
-  </url>
-  <url>
-    <loc>https://NSAPH-Software.github.io/CausalGPS/reference/w_fun.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/404.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/CausalGPS.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Developers-Guide.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/ERF-Kernel-Smoothing.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Estimating-GPS.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/FAQ.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Frequently-Asked-Questions.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Generating-Pseudo-Population.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Generating-Synthetic-Data.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Notes-on-SL-Wrapper.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Outcome-Models.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Singularity-Image.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Synthetic-Medicare.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/Testing-the-Package.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/articles/index.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/authors.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/index.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/news/index.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/CausalGPS-package.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/absolute_corr_fun.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/absolute_weighted_corr_fun.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_cw.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.cgps_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.gpsm_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/autoplot.gpsm_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_compile_pseudo_pop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_estimate_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_args_use_cov_transformers.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_covar_balance.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/check_kolmogorov_smirnov.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compile_pseudo_pop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_closest_wgps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_counter_weight.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_density.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_min_max.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_outer.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_resid.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/compute_risk.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/convert_data_into_standard_format.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/create_matching.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/create_weighting.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_hat_vals.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_npmetric_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_pmetric_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/estimate_semipmetric_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/gen_wrap_sl_lib.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_kernel.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_pseudo_pop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/generate_syn_data.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/get_logger.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/index.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/log_system_info.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/matching_fn.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/matching_l1.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_cw.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.cgps_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.gpsm_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/plot.gpsm_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/preprocess_data.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_cw.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.cgps_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.gpsm_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/print.gpsm_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/set_logger.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf_kernsmooth.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/smooth_erf_locpol.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_cw.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.cgps_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.gpsm_erf.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/summary.gpsm_pspop.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/synthetic_us_2010.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/train_it.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/transform_it.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_gps.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/trim_it.html</loc></url>
+<url><loc>https://NSAPH-Software.github.io/CausalGPS/reference/w_fun.html</loc></url>
 </urlset>
+

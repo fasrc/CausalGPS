@@ -24,6 +24,14 @@ methods for doubly robust estimation of continuous treatment effects.
 Journal of the Royal Statistical Society. Series B (Statistical Methodology),
 79(4), pp.1229-1245.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/NSAPH-Software/CausalGPS}
+  \item Report bugs at \url{https://github.com/NSAPH-Software/CausalGPS/issues}
+}
+
+}
 \author{
 Naeem Khoshnevis
 
