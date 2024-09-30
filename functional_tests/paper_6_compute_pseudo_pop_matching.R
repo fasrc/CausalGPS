@@ -28,8 +28,8 @@ pseudo_pop_weighting_object <- generate_pseudo_pop(
                                            covar_bl_method = "absolute")
 
 
-save(pseudo_pop_matching_object, file = "pseudo_pop_matching_object.RData")
-
-pdf("figure_paper_6_pseudo_pop_matching_object.pdf")
-plot(pseudo_pop_matching_object)
-dev.off()
+# save(pseudo_pop_matching_object, file = "pseudo_pop_matching_object.RData")
+#
+# pdf("figure_paper_6_pseudo_pop_matching_object.pdf")
+# plot(pseudo_pop_matching_object)
+# dev.off()

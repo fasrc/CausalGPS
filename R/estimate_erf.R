@@ -5,9 +5,9 @@
 #' Estimates the exposure-response function (ERF) for a matched and weighted
 #' dataset using parametric, semiparametric, and nonparametric models.
 #'
-#' @param .data A data frame containing an observed continuous exposure variable, weights,
-#' and an observed outcome variable. Includes an `id` column for future
-#' reference.
+#' @param .data A data frame containing an observed continuous exposure
+#' variable, weights, and an observed outcome variable. Includes an `id` column
+#' for future reference.
 #' @param .formula A formula specifying the relationship between the exposure
 #' variable and the outcome variable. For example, Y ~ w.
 #' @param weights_col_name A string representing the weight or counter column
@@ -45,7 +45,6 @@ estimate_erf <- function(.data,
   for (i in arg_names){
     assign(i, unlist(dot_args[i], use.names = FALSE))
   }
-
 
   # Check input parameters -----------------------------------------------------
   model_type <- tolower(model_type)
@@ -221,12 +220,23 @@ estimate_erf <- function(.data,
 
 fit_model <- function(data, formula, weights, model_type, ...) {
   if (model_type == "parametric") {
-    model <- do.call(gnm::gnm, c(list(formula = formula, data = data, weights = weights), ...))
+    model <- do.call(gnm::gnm,
+                     c(list(formula = formula,
+                            data = data,
+                            weights = weights),
+                       ...))
   } else if (model_type == "semiparametric") {
-    model <- do.call(gam::gam, c(list(formula = formula, data = data, weights = weights), ...))
+    model <- do.call(gam::gam,
+                     c(list(formula = formula,
+                            data = data,
+                            weights = weights),
+                       ...))
   } else if (model_type == "nonparametric") {
     # Assuming a function for nonparametric fitting exists
-    model <- do.call(estimate_npmetric_erf, c(list(data = data, weights = weights), ...))
+    model <- do.call(estimate_npmetric_erf,
+                     c(list(data = data,
+                            weights = weights),
+                       ...))
   } else {
     stop("Unsupported model type")
   }

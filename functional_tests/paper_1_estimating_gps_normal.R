@@ -1,5 +1,5 @@
 ##      author:  Naeem Khoshnevis
-##      created: September 2023
+##      created: September 2023 (Updated: September 2024)
 ##      purpose: Reproducing examples in the paper.
 
 
@@ -9,15 +9,16 @@ library(CausalGPS)
 library(data.table)
 
 # Load data --------------------------------------------------------------------
-data_file <- "zip_data.RData"
-if (!file.exists(data_file)) {
-  stop(paste0("Download the study data file from the following link:\n",
-              "https://drive.google.com/file/d/",
-              "1QFdbVU8Qir1gWf96c5h_ZhT-aPjhHpqn/view?usp=share_link"))
-} else {
-  load(data_file)
-}
 
+# Study data:
+# Multifactorial Zip Code-Year Dataset: Socio-Economic, Demographic, and
+# Environmental Variables in the Contiguous United States (2000-2016)
+# https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/5XBJBM
+
+
+data_file <- "zip_data.RData"
+
+load(data_file)
 data.table::setDF(zip_data)
 data <- zip_data
 
@@ -63,8 +64,8 @@ data_with_gps_normal <- estimate_gps(.data = data,
 )
 
 
-pdf("figure_paper_1_estimating_gps_normal.pdf")
-plot(data_with_gps_normal)
-dev.off()
-
-save(data_with_gps_normal, file = "data_with_gps_normal.RData")
+# pdf("figure_paper_1_estimating_gps_normal.pdf")
+# plot(data_with_gps_normal)
+# dev.off()
+#
+# save(data_with_gps_normal, file = "data_with_gps_normal.RData")
