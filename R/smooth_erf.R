@@ -124,12 +124,18 @@ smooth_erf_kernsmooth <- function(matched_Y,
     count_val <- as.integer(matched_cw)
   }
 
+
+
   # Replicate data based on count value. ----------------------------
   data <- data.frame(matched_Y = matched_Y,
                      matched_w = matched_w,
                      count_val = count_val)
+
+  # Make sure there is no unwanted count values ---------------------
+  data <- data[!is.na(data$count_val) & data$count_val > 0, ]
+
   data_rep <- data[rep(1:nrow(data),
-                       data$count), , drop = FALSE]
+                       data$count_val), , drop = FALSE]
   rownames(data_rep) <- NULL
 
   # drop count column

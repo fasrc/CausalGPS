@@ -88,6 +88,16 @@ estimate_npmetric_erf<-function(m_Y,
                                      x_eval = NULL,
                                      kernel_appr = kernel_appr)
 
+  # risk_val_1 <-  lapply(
+  #                                    bw_seq,
+  #                                    compute_risk,
+  #                                    matched_Y = m_Y,
+  #                                    matched_w = m_w,
+  #                                    matched_cw = counter_weight,
+  #                                    w_vals = w_vals,
+  #                                    x_eval = NULL,
+  #                                    kernel_appr = kernel_appr)
+
   parallel::stopCluster(cl)
 
   risk_val <- do.call(rbind, risk_val_1)[, 1]
