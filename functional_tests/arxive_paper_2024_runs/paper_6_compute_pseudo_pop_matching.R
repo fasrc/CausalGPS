@@ -19,7 +19,7 @@ confounders   <- c("mean_bmi", "smoke_rate",
                    "summer_rmax", "winter_rmax", "year")
 
 
-trimmed_df <- trim_it(data, c(0.1, 0.9), "w")
+trimmed_df <- trim_it(data, c(0.05, 0.95), "w")
 
 pseudo_pop_matching_object <- generate_pseudo_pop(
                                            .data = trimmed_df,
