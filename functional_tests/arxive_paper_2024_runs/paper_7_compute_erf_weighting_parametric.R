@@ -20,6 +20,7 @@ erf_obj_parametric_weighting <- estimate_erf(
   model_type = "parametric",
   .family = "gaussian")
 
-
+pdf("figure_paper_7_erf_obj_parametric_weighting.pdf")
 plot(erf_obj_parametric_weighting)
+dev.off()
 
