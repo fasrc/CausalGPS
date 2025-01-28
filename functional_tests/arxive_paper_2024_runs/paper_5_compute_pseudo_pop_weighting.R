@@ -18,9 +18,11 @@ confounders   <- c("mean_bmi", "smoke_rate",
                    "pct_owner_occ", "summer_tmmx", "winter_tmmx",
                    "summer_rmax", "winter_rmax", "year")
 
+trimmed_df <- trim_it(data, c(0.05, 0.95), "w")
+
 
 pseudo_pop_weighting_object <- generate_pseudo_pop(
-                                           .data = data,
+                                           .data = trimmed_df,
                                            cw_obj = cw_weighting_object,
                                            covariate_col_names = confounders,
                                            covar_bl_trs = 0.1,

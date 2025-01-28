@@ -17,7 +17,7 @@ cw_weighting_object <- compute_counter_weight(gps_obj = data_with_gps_normal,
                                               nthread = 6,
                                               delta_n = 0.1,
                                               dist_measure = "l1",
-                                              scale = 0.5)
+                                              scale = 1)
 
 
 save(cw_weighting_object, file = "cw_weighting_object.RData")
