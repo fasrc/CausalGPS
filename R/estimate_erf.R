@@ -142,9 +142,27 @@ estimate_erf <- function(.data,
       stop("gnm model is null. Did not converge.")
     }
 
-    formula_string <- deparse(gam_model$formula)
-    parts <- strsplit(formula_string, "~")[[1]]
-    predictor <- trimws(parts[2])
+    #formula_string <- deparse(gam_model$formula)
+    #parts <- strsplit(formula_string, "~")[[1]]
+    #predictor <- trimws(parts[2])
+    
+    # Extract all terms
+    all_terms <- attr(terms(gam_model), "term.labels")
+    
+    # Function to extract the variable name from terms (handles s(w, k) cases)
+    extract_variable <- function(term) {
+      if (startsWith(term, "s(")) {
+        inner_part <- strsplit(term, "\\(")[[1]][2]  # Get "w, 2)" or "w)"
+        variable <- strsplit(inner_part, ",")[[1]][1]  # Extract "w"
+        variable <- strsplit(variable, "\\)")[[1]][1]  # Remove trailing ")"
+        return(variable)
+      } else {
+        return(term)  # If it's already "w", return as is
+      }
+    }
+    
+    # Apply extraction function to all terms
+    predictor <- sapply(all_terms, extract_variable)
 
     x <- gam_model$data[[predictor]]
 
